@@ -13,8 +13,6 @@
     --bg1:#f7e36a;
     --bg2:#f2d22a;
     --card:#f6e7d7;
-    --pill:#111;
-    --shadow:0 14px 26px rgba(0,0,0,.18);
     --blue:#2f7df6;
     --red:#e20000;
     --line:#cfcfcf;
@@ -756,14 +754,17 @@
   function onlyNum(val, len){
     return (val || "").replace(/[^0-9]/g, "").slice(0, len);
   }
+
   function pad(val, len){
     const v = onlyNum(val, len);
     return v ? v.padStart(len, "0") : "";
   }
+
   function nowTime(){
     const d = new Date();
     return String(d.getHours()).padStart(2,"0") + ":" + String(d.getMinutes()).padStart(2,"0");
   }
+
   function todayStr(){
     const d = new Date();
     const y = d.getFullYear();
@@ -771,12 +772,14 @@
     const day = String(d.getDate()).padStart(2,"0");
     return `${y}-${m}-${day}`;
   }
+
   function dateToStr(d){
     const y = d.getFullYear();
     const m = String(d.getMonth()+1).padStart(2,"0");
     const day = String(d.getDate()).padStart(2,"0");
     return `${y}-${m}-${day}`;
   }
+
   function getMonday(dateLike){
     const d = new Date(dateLike);
     d.setHours(0,0,0,0);
@@ -784,42 +787,51 @@
     d.setDate(d.getDate() - day + 1);
     return d;
   }
+
   function getSunday(dateLike){
     const d = getMonday(dateLike);
     d.setDate(d.getDate() + 6);
     return d;
   }
+
   function getWeekKey(dateLike){
     return dateToStr(getMonday(dateLike));
   }
+
   function getViewingDate(){
     const d = new Date();
     d.setDate(d.getDate() + weekOffset * 7);
     return d;
   }
+
   function getViewingWeekKey(){
     return getWeekKey(getViewingDate());
   }
+
   function updateWeekLabel(){
     const monday = getMonday(getViewingDate());
     const sunday = getSunday(getViewingDate());
     weekLabel.textContent = `${dateToStr(monday)} ~ ${dateToStr(sunday)}`;
   }
+
   function calcWeekOffsetFromDate(dateStr){
     const thisMonday = getMonday(new Date());
     const targetMonday = getMonday(dateStr);
     return Math.round((targetMonday - thisMonday) / 86400000 / 7);
   }
+
   function moveWeek(n){
     weekOffset += n;
     updateWeekLabel();
     renderList();
   }
+
   function goThisWeek(){
     weekOffset = 0;
     updateWeekLabel();
     renderList();
   }
+
   function deleteCurrentWeek(){
     const wk = getViewingWeekKey();
     const target = memos.filter(m => m.weekKey === wk);
@@ -852,6 +864,7 @@
       });
       return;
     }
+
     if(k === "SHARED-HASH"){
       t.value = onlyNum(t.value, 3);
       document.querySelectorAll('input[data-k="SHARED-HASH"]').forEach(el=>{
@@ -859,6 +872,7 @@
       });
       return;
     }
+
     if(k.endsWith("-STA")) t.value = onlyNum(t.value, 4);
     if(k.endsWith("-STD")) t.value = onlyNum(t.value, 4);
     if(k.endsWith("-t")) t.value = onlyNum(t.value, 3);
@@ -881,8 +895,8 @@
   }
 
   function addExtraRow(type){
-    const root = sections.querySelector(\`.section[data-type="\${type}"]\`);
-    const box = root ? root.querySelector(\`#\${type}-EXTRAS\`) : null;
+    const root = sections.querySelector(`.section[data-type="${type}"]`);
+    const box = root ? root.querySelector(`#${type}-EXTRAS`) : null;
     if(!box) return;
     box.appendChild(makeExtraRow(type, "CREW", ""));
   }
@@ -955,14 +969,17 @@
         <div class="lab" style="min-width:96px;">CMPT 1</div>
         <input class="long" data-k="${type}-cmpt1" value="${cmpt1Value}" placeholder="F3">
       </div>
+
       <div class="row">
         <div class="lab" style="min-width:96px;">CMPT 3</div>
         <input class="long" data-k="${type}-cmpt2" placeholder="TEXT" value="${memoData ? (memoData[type+"-cmpt2"] || "") : ""}">
       </div>
+
       <div class="row">
         <div class="lab" style="min-width:96px;">CMPT 4</div>
         <input class="long" data-k="${type}-cmpt3" placeholder="TEXT" value="${memoData ? (memoData[type+"-cmpt3"] || "") : ""}">
       </div>
+
       <div class="row">
         <div class="lab" style="min-width:96px;">CMPT 5</div>
         <input class="long" data-k="${type}-cmpt4" placeholder="TEXT" value="${memoData ? (memoData[type+"-cmpt4"] || "") : ""}">
@@ -990,7 +1007,11 @@
 
     const timeBtn = d.querySelector(`[data-timebtn="${type}"]`);
     const timeShown = d.querySelector(`#${type}-TIMESHOWN`);
-    timeBtn.addEventListener("click", ()=>{ timeShown.textContent = nowTime(); });
+
+    timeBtn.addEventListener("click", ()=>{
+      timeShown.textContent = nowTime();
+    });
+
     timeBtn.addEventListener("dblclick", ()=>{
       const cur = timeShown.textContent || nowTime();
       const t = prompt("TIME (HH:MM 24H)", cur);
@@ -1051,12 +1072,12 @@
     data.sharedHASH = pad(document.querySelector('input[data-k="SHARED-HASH"]')?.value || "", 3);
 
     ["INBOUND","OUTBOUND"].forEach(type=>{
-      const root = sections.querySelector(\`.section[data-type="\${type}"]\`);
+      const root = sections.querySelector(`.section[data-type="${type}"]`);
       if(!root) return;
 
-      const gi = (k)=> root.querySelector(\`input[data-k="\${type}-\${k}"]\`);
-      const cm = (n)=> root.querySelector(\`input[data-k="\${type}-cmpt\${n}"]\`);
-      const note = root.querySelector(\`textarea[data-k="\${type}-note"]\`);
+      const gi = (k)=> root.querySelector(`input[data-k="${type}-${k}"]`);
+      const cm = (n)=> root.querySelector(`input[data-k="${type}-cmpt${n}"]`);
+      const note = root.querySelector(`textarea[data-k="${type}-note"]`);
 
       data[type+"-STA"] = type==="INBOUND" ? pad(gi("STA")?.value, 4) : "";
       data[type+"-STD"] = type==="OUTBOUND" ? pad(gi("STD")?.value, 4) : "";
@@ -1076,7 +1097,7 @@
       data[type+"-TIME"] = shown ? (shown.textContent || "") : "";
 
       const extras = [];
-      const box = root.querySelector(\`#\${type}-EXTRAS\`);
+      const box = root.querySelector(`#${type}-EXTRAS`);
       if(box){
         [...box.querySelectorAll(".extraRow")].forEach(r=>{
           const key = (r.querySelector("select")?.value || "").toUpperCase();
@@ -1181,9 +1202,10 @@
   }
 
   function addPhoto(){
-    photoInput.value="";
+    photoInput.value = "";
     photoInput.click();
   }
+
   photoInput.onchange = (e)=>{
     const f = e.target.files && e.target.files[0];
     if(!f) return;
@@ -1194,11 +1216,13 @@
     };
     r.readAsDataURL(f);
   };
+
   function openPhoto(){
     if(!photo) return;
     photoImg.src = photo;
     photoLayer.style.display = "flex";
   }
+
   function closePhoto(){
     photoLayer.style.display = "none";
   }
@@ -1211,10 +1235,12 @@
     equipModal.style.display = "flex";
     equipModal.setAttribute("aria-hidden","false");
   }
+
   function closeEquip(){
     equipModal.style.display = "none";
     equipModal.setAttribute("aria-hidden","true");
   }
+
   function saveEquip(){
     const eq = {
       tug1: pad(tug1.value,2),
@@ -1225,6 +1251,7 @@
     updateEquipBadge();
     closeEquip();
   }
+
   function updateEquipBadge(){
     const eq = JSON.parse(localStorage.getItem("tiger_equipment") || "{}");
     if(!eq.tug1 && !eq.tug2 && !eq.belt){
@@ -1254,12 +1281,14 @@
     startY = y;
     sheet.style.transition = "none";
   }
+
   function onMove(y){
     if(!dragging) return;
     const dy = Math.max(0, y - startY);
     currentTranslate = dy;
     sheet.style.transform = `translateY(${dy}px)`;
   }
+
   function onEnd(){
     if(!dragging) return;
     dragging = false;
