@@ -6,12 +6,12 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<title>TIGER MEMO VER 1.0</title>
+<title>TIGER MEMO VER 5.1</title>
 
 <style>
   :root{
-    --bg1:#f7de4b;
-    --bg2:#efcf1f;
+    --bg1:#f7e36a;
+    --bg2:#f2d22a;
     --card:#f6e7d7;
     --pill:#111;
     --shadow:0 14px 26px rgba(0,0,0,.18);
@@ -20,13 +20,15 @@
     --line:#cfcfcf;
     --ui:.8;
   }
+
   *{box-sizing:border-box}
+
   body{
     margin:0;
     font-family:-apple-system, system-ui, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
     font-weight:700;
     background:
-      radial-gradient(1200px 700px at 50% -10%, #fff3a2 0%, transparent 55%),
+      radial-gradient(1200px 700px at 50% -10%, #fff0a8 0%, transparent 55%),
       linear-gradient(180deg,var(--bg1),var(--bg2));
     min-height:100vh;
     overflow-x:hidden;
@@ -108,7 +110,7 @@
   }
 
   #memoList{
-    padding:calc(10px * var(--ui)) calc(14px * var(--ui)) calc(120px * var(--ui));
+    padding:calc(10px * var(--ui)) calc(14px * var(--ui)) calc(110px * var(--ui));
     max-width:780px;
     margin:0 auto;
   }
@@ -136,6 +138,7 @@
     gap:calc(10px * var(--ui));
     align-items:flex-start;
   }
+
   .selBox{
     width:calc(30px * var(--ui));
     height:calc(30px * var(--ui));
@@ -243,7 +246,6 @@
     font-weight:1000;
     line-height:1.15;
     text-align:right;
-    min-width:unset;
     box-shadow:0 14px 26px rgba(0,0,0,.22);
     display:none;
     text-transform:uppercase;
@@ -460,6 +462,10 @@
     padding-left:calc(14px * var(--ui));
     text-align:left;
   }
+  .fixedField{
+    background:#f6f6f6;
+    color:#111;
+  }
 
   .extraBox{
     background:#fff;
@@ -520,20 +526,6 @@
     text-transform:uppercase;
   }
 
-  .lirRow{
-    display:flex;
-    align-items:center;
-    gap:calc(8px * var(--ui));
-    margin:calc(10px * var(--ui)) 0;
-    flex-wrap:wrap;
-  }
-  .lirBtn{
-    padding:calc(8px * var(--ui)) calc(12px * var(--ui));
-    font-size:calc(14px * var(--ui));
-    border-radius:calc(14px * var(--ui));
-    box-shadow:none;
-  }
-
   .bottomBtns{
     display:flex;
     gap:calc(18px * var(--ui));
@@ -566,8 +558,8 @@
   .rowGrid3{
     display:grid;
     grid-template-columns:
-      calc(34px * var(--ui)) 1fr
-      calc(34px * var(--ui)) 1fr
+      calc(26px * var(--ui)) 1.1fr
+      calc(20px * var(--ui)) 1fr
       calc(14px * var(--ui)) .95fr;
     gap:calc(10px * var(--ui));
     align-items:center;
@@ -593,7 +585,7 @@
 <header id="homeHeader" onclick="openPhoto()" ondblclick="openPhoto()">
   <div class="titleWrap">
     <div class="titleMain">TIGER MEMO</div>
-    <div class="titleVer">VER 1.0</div>
+    <div class="titleVer">VER 5.1</div>
   </div>
 </header>
 
@@ -617,7 +609,6 @@
 <div id="equipBadge"></div>
 
 <input type="file" id="photoInput" accept="image/*" hidden />
-<input type="file" id="lirPhotoInput" accept="image/*" hidden />
 
 <div class="modal" id="modal" aria-hidden="true">
   <div class="box" id="sheet" role="dialog" aria-modal="true">
@@ -681,7 +672,6 @@
   const sections = document.getElementById("sections");
   const memoList = document.getElementById("memoList");
   const photoInput = document.getElementById("photoInput");
-  const lirPhotoInput = document.getElementById("lirPhotoInput");
   const photoLayer = document.getElementById("photoLayer");
   const photoImg = document.getElementById("photoImg");
   const memoDate = document.getElementById("memoDate");
@@ -697,10 +687,9 @@
   let memos = JSON.parse(localStorage.getItem("tiger_memos") || "[]");
   let photo = localStorage.getItem("tiger_photo");
   let editId = null;
-  let currentLirPhoto = "";
   let weekOffset = 0;
 
-  const EXTRA_KEYS = ["W","C","COB","STRAP","GB","TS","EMS","CARSEAT","COMAT","LONGPIN"];
+  const EXTRA_KEYS = ["CREW","C","W","TS"];
 
   function onlyNum(val, len){
     return (val || "").replace(/[^0-9]/g, "").slice(0, len);
@@ -739,27 +728,25 @@
     return d;
   }
   function getWeekKey(dateLike){
-    const monday = getMonday(dateLike);
-    return dateToStr(monday);
+    return dateToStr(getMonday(dateLike));
   }
   function getViewingDate(){
     const d = new Date();
-    d.setDate(d.getDate() + (weekOffset * 7));
+    d.setDate(d.getDate() + weekOffset * 7);
     return d;
   }
   function getViewingWeekKey(){
     return getWeekKey(getViewingDate());
   }
-  function calcWeekOffsetFromDate(dateStr){
-    const thisMonday = getMonday(new Date());
-    const targetMonday = getMonday(dateStr);
-    const diff = Math.round((targetMonday - thisMonday) / 86400000);
-    return Math.round(diff / 7);
-  }
   function updateWeekLabel(){
     const monday = getMonday(getViewingDate());
     const sunday = getSunday(getViewingDate());
     weekLabel.textContent = `${dateToStr(monday)} ~ ${dateToStr(sunday)}`;
+  }
+  function calcWeekOffsetFromDate(dateStr){
+    const thisMonday = getMonday(new Date());
+    const targetMonday = getMonday(dateStr);
+    return Math.round((targetMonday - thisMonday) / 86400000 / 7);
   }
   function moveWeek(n){
     weekOffset += n;
@@ -784,58 +771,53 @@
     renderList();
   }
 
-  function syncByDataK(dataK, value){
-    document.querySelectorAll(`input[data-k="${dataK}"]`).forEach(el=>{
-      if(el !== document.activeElement) el.value = value;
-    });
-  }
-
-  function addLirPhoto(){
-    lirPhotoInput.value = "";
-    lirPhotoInput.click();
-  }
-  function viewLirPhoto(){
-    if(!currentLirPhoto) return;
-    photoImg.src = currentLirPhoto;
-    photoLayer.style.display = "flex";
-  }
-
-  lirPhotoInput.onchange = (e)=>{
-    const f = e.target.files && e.target.files[0];
-    if(!f) return;
-    const r = new FileReader();
-    r.onload = ()=>{
-      currentLirPhoto = r.result || "";
-    };
-    r.readAsDataURL(f);
-  };
-
   document.addEventListener("input", (e)=>{
     const t = e.target;
     if(!(t instanceof HTMLInputElement)) return;
     const k = t.dataset.k || "";
     if(!k) return;
 
-    if(k === "SHARED-HL"){
-      t.value = onlyNum(t.value, 4);
-      syncByDataK("SHARED-HL", t.value);
+    if(k === "SHARED-B"){
+      t.value = onlyNum(t.value, 5);
+      document.querySelectorAll('input[data-k="SHARED-B"]').forEach(el=>{
+        if(el !== t) el.value = t.value;
+      });
       return;
     }
     if(k === "SHARED-HASH"){
       t.value = onlyNum(t.value, 3);
-      syncByDataK("SHARED-HASH", t.value);
+      document.querySelectorAll('input[data-k="SHARED-HASH"]').forEach(el=>{
+        if(el !== t) el.value = t.value;
+      });
       return;
     }
     if(k.endsWith("-STA")) t.value = onlyNum(t.value, 4);
     if(k.endsWith("-STD")) t.value = onlyNum(t.value, 4);
-    if(k.endsWith("-c7")) t.value = onlyNum(t.value, 4);
     if(k.endsWith("-t")) t.value = onlyNum(t.value, 3);
     if(k.endsWith("-d")) t.value = onlyNum(t.value, 2);
     if(k.endsWith("-bb")) t.value = onlyNum(t.value, 2);
-    if(k.endsWith("-tt")) t.value = onlyNum(t.value, 4);
-    if(k.endsWith("-tb")) t.value = onlyNum(t.value, 4);
     if(k.startsWith("extraVal-")) t.value = onlyNum(t.value, 3);
   });
+
+  function makeExtraRow(type, key="CREW", val=""){
+    const row = document.createElement("div");
+    row.className = "extraRow";
+    row.innerHTML = `
+      <select>
+        ${EXTRA_KEYS.map(k => `<option value="${k}" ${k===key ? "selected" : ""}>${k}</option>`).join("")}
+      </select>
+      <input class="numBox" inputmode="numeric" maxlength="3" placeholder="000" data-k="extraVal-${type}" value="${onlyNum(val,3)}">
+      <button type="button" class="minusBtn" onclick="this.parentElement.remove()">-</button>
+    `;
+    return row;
+  }
+
+  function addExtraRow(type){
+    const root = sections.querySelector(`.section[data-type="${type}"]`);
+    const box = root ? root.querySelector(`#${type}-EXTRAS`) : null;
+    if(!box) return;
+    box.appendChild(makeExtraRow(type, "CREW", ""));
+  }
 
   function makeSection(type, memoData){
     const d = document.createElement("div");
@@ -843,14 +825,13 @@
     d.dataset.type = type;
 
     const savedTime = memoData ? (memoData[type+"-TIME"] || "") : "";
-    const cmpt1Default = memoData ? (memoData[type+"-cmpt1"] || "F") : "F";
-    const cmpt2Default = memoData ? (memoData[type+"-cmpt2"] || "F") : "F";
-    const sharedHL = memoData ? (memoData.sharedHL || "") : "";
+    const sharedB = memoData ? (memoData.sharedB || "") : "";
     const sharedHASH = memoData ? (memoData.sharedHASH || "") : "";
     const v = (k)=> memoData ? (memoData[type+"-"+k] || "") : "";
     const noteV = memoData ? (memoData[type+"-note"] || "") : "";
     const staStdLabel = type === "INBOUND" ? "STA" : "STD";
     const staStdKey = type === "INBOUND" ? "STA" : "STD";
+    const fixedItText = type === "INBOUND" ? "IT602" : "IT603";
 
     d.innerHTML = `
       <div class="sectionHead">
@@ -868,28 +849,30 @@
       </div>
 
       <div class="rowGrid3">
-        <div class="lab">7C</div>
-        <input class="numBox" inputmode="numeric" maxlength="4" placeholder="0000" data-k="${type}-c7" value="${v("c7")}">
-        <div class="lab">HL</div>
-        <input class="numBox" inputmode="numeric" maxlength="4" placeholder="0000" data-k="SHARED-HL" value="${sharedHL}">
+        <div class="lab">IT</div>
+        <input class="long fixedField" value="${fixedItText}" readonly tabindex="-1">
+        <div class="lab">B</div>
+        <input class="numBox" inputmode="numeric" maxlength="5" placeholder="00000" data-k="SHARED-B" value="${sharedB}">
         <div class="lab">#</div>
         <input class="numBox" inputmode="numeric" maxlength="3" placeholder="000" data-k="SHARED-HASH" value="${sharedHASH}">
       </div>
 
       <div class="row">
         <div class="lab" style="min-width:96px;">CMPT 1</div>
-        <input class="long" data-k="${type}-cmpt1" placeholder="TEXT" value="${cmpt1Default}">
+        <input class="long fixedField" data-k="${type}-cmpt1" value="F3" readonly tabindex="-1">
       </div>
       <div class="row">
-        <div class="lab" style="min-width:96px;">CMPT 2</div>
-        <input class="long" data-k="${type}-cmpt2" placeholder="TEXT" value="${cmpt2Default}">
+        <div class="lab" style="min-width:96px;">CMPT 3</div>
+        <input class="long" data-k="${type}-cmpt2" placeholder="TEXT" value="${memoData ? (memoData[type+"-cmpt2"] || "") : ""}">
       </div>
-      ${[3,4].map(i=>`
-        <div class="row">
-          <div class="lab" style="min-width:96px;">CMPT ${i}</div>
-          <input class="long" data-k="${type}-cmpt${i}" placeholder="TEXT" value="${memoData ? (memoData[type+"-cmpt"+i]||"") : ""}">
-        </div>
-      `).join("")}
+      <div class="row">
+        <div class="lab" style="min-width:96px;">CMPT 4</div>
+        <input class="long" data-k="${type}-cmpt3" placeholder="TEXT" value="${memoData ? (memoData[type+"-cmpt3"] || "") : ""}">
+      </div>
+      <div class="row">
+        <div class="lab" style="min-width:96px;">CMPT 5</div>
+        <input class="long" data-k="${type}-cmpt4" placeholder="TEXT" value="${memoData ? (memoData[type+"-cmpt4"] || "") : ""}">
+      </div>
 
       <div class="rowGridTDBB">
         <div class="lab">T</div>
@@ -899,20 +882,6 @@
         <div class="lab">BB</div>
         <input class="numBox" inputmode="numeric" maxlength="2" placeholder="00" data-k="${type}-bb" value="${v("bb")}">
       </div>
-
-      ${type==="OUTBOUND" ? `
-        <div class="row">
-          <div class="lab" style="min-width:60px;">T/T</div>
-          <input class="numBox" inputmode="numeric" maxlength="4" placeholder="0000" data-k="${type}-tt" value="${v("tt")}">
-          <div class="lab" style="min-width:60px;">T/B</div>
-          <input class="numBox" inputmode="numeric" maxlength="4" placeholder="0000" data-k="${type}-tb" value="${v("tb")}">
-        </div>
-
-        <div class="lirRow">
-          <button type="button" class="lirBtn" onclick="addLirPhoto()">LIR</button>
-          <button type="button" class="lirBtn" onclick="viewLirPhoto()">VIEW</button>
-        </div>
-      ` : ""}
 
       <div class="extraBox">
         <div class="extraHead">
@@ -936,32 +905,12 @@
 
     const extrasBox = d.querySelector(`#${type}-EXTRAS`);
     const extras = memoData ? (memoData[type+"-EXTRAS"] || []) : [];
-    extras.forEach(ex=>extrasBox.appendChild(makeExtraRow(type, ex.key, ex.val)));
+    extras.forEach(ex => extrasBox.appendChild(makeExtraRow(type, ex.key, ex.val)));
 
     return d;
   }
 
-  function makeExtraRow(type, key="W", val=""){
-    const row = document.createElement("div");
-    row.className = "extraRow";
-    row.innerHTML = `
-      <select>
-        ${EXTRA_KEYS.map(k=>`<option value="${k}" ${k===key?"selected":""}>${k}</option>`).join("")}
-      </select>
-      <input class="numBox" inputmode="numeric" maxlength="3" placeholder="000" data-k="extraVal-${type}" value="${onlyNum(val,3)}">
-      <button type="button" class="minusBtn" onclick="this.parentElement.remove()">-</button>
-    `;
-    return row;
-  }
-
-  function addExtraRow(type){
-    const root = sections.querySelector(`.section[data-type="${type}"]`);
-    const box = root ? root.querySelector(`#${type}-EXTRAS`) : null;
-    if(!box) return;
-    box.appendChild(makeExtraRow(type, "W", ""));
-  }
-
-  function buildSections(memoData){
+  function buildFixedSections(memoData){
     sections.innerHTML = "";
     sections.appendChild(makeSection("INBOUND", memoData));
     sections.appendChild(makeSection("OUTBOUND", memoData));
@@ -969,9 +918,8 @@
 
   function newMemo(){
     editId = null;
-    currentLirPhoto = "";
     memoDate.value = todayStr();
-    buildSections(null);
+    buildFixedSections(null);
     openModal();
   }
 
@@ -993,17 +941,13 @@
   }
 
   function saveMemo(){
-    const data = { id: editId ?? Date.now() };
-    data.hasIn = true;
-    data.hasOut = true;
+    const data = { id: editId ?? Date.now(), hasIn:true, hasOut:true };
 
     data.memoDate = memoDate.value || todayStr();
     data.weekKey = getWeekKey(data.memoDate);
 
-    data.sharedHL = pad(document.querySelector(`input[data-k="SHARED-HL"]`)?.value || "", 4);
-    data.sharedHASH = pad(document.querySelector(`input[data-k="SHARED-HASH"]`)?.value || "", 3);
-
-    const normalizeF = (v)=> (v && v.trim() ? v : "F");
+    data.sharedB = pad(document.querySelector('input[data-k="SHARED-B"]')?.value || "", 5);
+    data.sharedHASH = pad(document.querySelector('input[data-k="SHARED-HASH"]')?.value || "", 3);
 
     ["INBOUND","OUTBOUND"].forEach(type=>{
       const root = sections.querySelector(`.section[data-type="${type}"]`);
@@ -1016,21 +960,14 @@
       data[type+"-STA"] = type==="INBOUND" ? pad(gi("STA")?.value, 4) : "";
       data[type+"-STD"] = type==="OUTBOUND" ? pad(gi("STD")?.value, 4) : "";
 
-      data[type+"-c7"] = pad(gi("c7")?.value, 4);
       data[type+"-t"]  = pad(gi("t")?.value, 3);
       data[type+"-d"]  = pad(gi("d")?.value, 2);
       data[type+"-bb"] = pad(gi("bb")?.value, 2);
 
-      data[type+"-cmpt1"] = normalizeF(cm(1)?.value || "");
-      data[type+"-cmpt2"] = normalizeF(cm(2)?.value || "");
+      data[type+"-cmpt1"] = "F3";
+      data[type+"-cmpt2"] = cm(2)?.value || "";
       data[type+"-cmpt3"] = cm(3)?.value || "";
       data[type+"-cmpt4"] = cm(4)?.value || "";
-
-      if(type==="OUTBOUND"){
-        data[type+"-tt"] = pad(gi("tt")?.value, 4);
-        data[type+"-tb"] = pad(gi("tb")?.value, 4);
-        data[type+"-LIRPHOTO"] = currentLirPhoto || "";
-      }
 
       data[type+"-note"] = note ? (note.value || "") : "";
 
@@ -1064,15 +1001,11 @@
   }
 
   function formatTitleLine(m, type){
-    const hl = (m.sharedHL || "").trim();
+    const b = (m.sharedB || "").trim();
     const hash = (m.sharedHASH || "").trim();
-    const c7 = String((m[`${type}-c7`] || "")).trim();
-
-    if(type === "INBOUND"){
-      return `7C[${c7}] HL[${hl}]`;
-    }else{
-      return `7C[${c7}] #[${hash}]`;
-    }
+    const it = type === "INBOUND" ? "IT602" : "IT603";
+    if(type === "INBOUND") return `${it} B[${b}]`;
+    return `${it} #[${hash}]`;
   }
 
   function renderList(flashId){
@@ -1096,19 +1029,12 @@
     weekMemos.forEach(m=>{
       const card = document.createElement("div");
       card.className = "memoCard" + (m.id===flashId ? " flash" : "");
-
       card.innerHTML = `
         <div class="memoRow">
           <input class="selBox" type="checkbox" data-id="${m.id}">
           <div class="lines" data-open="${m.id}">
-            <div class="line">
-              <div class="tagPill">IN</div>
-              <div class="textPill">${formatTitleLine(m, "INBOUND")}</div>
-            </div>
-            <div class="line">
-              <div class="tagPill">OUT</div>
-              <div class="textPill">${formatTitleLine(m, "OUTBOUND")}</div>
-            </div>
+            <div class="line"><div class="tagPill">IN</div><div class="textPill">${formatTitleLine(m, "INBOUND")}</div></div>
+            <div class="line"><div class="tagPill">OUT</div><div class="textPill">${formatTitleLine(m, "OUTBOUND")}</div></div>
           </div>
         </div>
         <div class="datePill">${m.memoDate || ""}</div>
@@ -1127,16 +1053,11 @@
   function editMemo(id){
     const m = memos.find(x=>x.id===id);
     if(!m) return;
-
     editId = id;
-    currentLirPhoto = m["OUTBOUND-LIRPHOTO"] || "";
     memoDate.value = m.memoDate || todayStr();
-
-    buildSections(m);
-
-    syncByDataK("SHARED-HL", m.sharedHL || "");
-    syncByDataK("SHARED-HASH", m.sharedHASH || "");
-
+    buildFixedSections(m);
+    document.querySelectorAll('input[data-k="SHARED-B"]').forEach(el => el.value = m.sharedB || "");
+    document.querySelectorAll('input[data-k="SHARED-HASH"]').forEach(el => el.value = m.sharedHASH || "");
     openModal();
   }
 
