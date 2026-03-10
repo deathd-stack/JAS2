@@ -6,13 +6,15 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<title>TIGER MEMO VER 1.0</title>
+<title>TIGER MEMO VER 2.0</title>
 
 <style>
   :root{
     --bg1:#f7e36a;
     --bg2:#f2d22a;
     --card:#f6e7d7;
+    --pill:#111;
+    --shadow:0 14px 26px rgba(0,0,0,.18);
     --blue:#2f7df6;
     --red:#e20000;
     --line:#cfcfcf;
@@ -38,6 +40,7 @@
     user-select:none;
     cursor:pointer;
   }
+
   .titleWrap{
     display:flex;
     justify-content:center;
@@ -45,6 +48,7 @@
     gap:10px;
     flex-wrap:wrap;
   }
+
   .titleMain{
     font-size:42px;
     font-weight:1000;
@@ -52,6 +56,7 @@
     color:#111;
     text-transform:uppercase;
   }
+
   .titleVer{
     font-size:18px;
     font-weight:1000;
@@ -67,6 +72,7 @@
     padding:calc(8px * var(--ui)) calc(14px * var(--ui)) calc(6px * var(--ui));
     flex-wrap:wrap;
   }
+
   button{
     border:none;
     border-radius:calc(22px * var(--ui));
@@ -79,6 +85,7 @@
     text-transform:uppercase;
     cursor:pointer;
   }
+
   button:active{transform:scale(.99)}
 
   .weekBar{
@@ -90,12 +97,14 @@
     gap:calc(8px * var(--ui));
     flex-wrap:wrap;
   }
+
   .weekBtn{
     padding:calc(8px * var(--ui)) calc(12px * var(--ui));
     font-size:calc(14px * var(--ui));
     border-radius:calc(14px * var(--ui));
     box-shadow:none;
   }
+
   .weekLabel{
     background:rgba(255,255,255,.92);
     border-radius:calc(14px * var(--ui));
@@ -112,6 +121,7 @@
     max-width:780px;
     margin:0 auto;
   }
+
   .emptyWeek{
     background:rgba(255,255,255,.22);
     border-radius:calc(20px * var(--ui));
@@ -131,6 +141,7 @@
     border:2px solid rgba(255,255,255,.45);
     overflow:hidden;
   }
+
   .memoRow{
     display:flex;
     gap:calc(10px * var(--ui));
@@ -148,11 +159,13 @@
     flex:0 0 auto;
     position:relative;
   }
+
   .selBox:checked{
     background:#fff;
     border-color:#1e63d8;
     box-shadow:0 0 0 calc(4px * var(--ui)) rgba(47,125,246,.14);
   }
+
   .selBox:checked::after{
     content:"";
     position:absolute;
@@ -173,12 +186,14 @@
     cursor:pointer;
     min-width:0;
   }
+
   .line{
     display:flex;
     align-items:flex-start;
     gap:calc(10px * var(--ui));
     min-width:0;
   }
+
   .tagPill{
     background:#111;
     color:#fff;
@@ -191,6 +206,7 @@
     flex:0 0 auto;
     text-transform:uppercase;
   }
+
   .textPill{
     background:rgba(210,199,188,.45);
     border-radius:999px;
@@ -205,6 +221,7 @@
     word-break:break-word;
     text-transform:uppercase;
   }
+
   .datePill{
     margin-top:calc(6px * var(--ui));
     margin-left:calc(40px * var(--ui));
@@ -232,6 +249,7 @@
     box-shadow:0 12px 22px rgba(0,0,0,.18);
     text-transform:uppercase;
   }
+
   #equipBadge{
     position:fixed;
     right:calc(14px * var(--ui));
@@ -248,6 +266,7 @@
     display:none;
     text-transform:uppercase;
   }
+
   #equipBadge .b1{font-size:calc(18px * var(--ui));}
   #equipBadge .b2{font-size:calc(18px * var(--ui)); opacity:.95;}
 
@@ -262,6 +281,7 @@
     overscroll-behavior:contain;
     pointer-events:none;
   }
+
   .box{
     width:100%;
     max-width:820px;
@@ -283,6 +303,7 @@
     background:#fff;
     z-index:2;
   }
+
   .drag-handle{
     width:calc(60px * var(--ui));
     height:calc(7px * var(--ui));
@@ -300,6 +321,7 @@
     user-select:none;
     text-transform:uppercase;
   }
+
   .modalTitleTap .m1{font-size:calc(18px * var(--ui));}
   .modalTitleTap .m2{font-size:calc(12px * var(--ui)); opacity:.55; margin-top:2px;}
 
@@ -310,12 +332,14 @@
     gap:calc(8px * var(--ui));
     margin-bottom:calc(8px * var(--ui));
   }
+
   .dateLine .dateLab{
     font-size:calc(15px * var(--ui));
     font-weight:1000;
     color:#111;
     text-transform:uppercase;
   }
+
   .dateInput{
     width:auto !important;
     min-width:calc(180px * var(--ui));
@@ -331,6 +355,7 @@
     overflow:hidden;
     border:1px solid #e6e6e6;
   }
+
   .sectionHead{
     display:flex;
     align-items:flex-start;
@@ -338,6 +363,7 @@
     margin-bottom:calc(10px * var(--ui));
     gap:calc(10px * var(--ui));
   }
+
   .sectionTitle{
     font-size:calc(24px * var(--ui));
     font-weight:1000;
@@ -352,18 +378,21 @@
     flex-wrap:wrap;
     justify-content:flex-end;
   }
+
   .staStdWrap{
     display:flex;
     align-items:center;
     gap:calc(8px * var(--ui));
     white-space:nowrap;
   }
+
   .staStdLab{
     font-size:calc(16px * var(--ui));
     font-weight:1000;
     color:#111;
     text-transform:uppercase;
   }
+
   .staStdInput{
     width:calc(92px * var(--ui)) !important;
     min-width:calc(92px * var(--ui));
@@ -377,6 +406,7 @@
     white-space:nowrap;
     text-transform:uppercase;
   }
+
   .timeBtn{
     border:none;
     background:transparent;
@@ -389,7 +419,9 @@
     border-radius:calc(10px * var(--ui));
     text-transform:uppercase;
   }
+
   .timeBtn:active{background:rgba(226,27,27,.08);}
+
   .timeVal{
     font-weight:1000;
     font-size:calc(22px * var(--ui));
@@ -407,6 +439,7 @@
     flex-wrap:nowrap;
     min-width:0;
   }
+
   .lab{
     font-size:calc(20px * var(--ui));
     font-weight:1000;
@@ -428,6 +461,7 @@
     font-variant-numeric:tabular-nums;
     text-transform:uppercase;
   }
+
   input{
     width:100%;
     height:calc(54px * var(--ui));
@@ -435,6 +469,7 @@
     padding:0 calc(10px * var(--ui));
     text-align:center;
   }
+
   textarea{
     width:100%;
     height:calc(76px * var(--ui));
@@ -443,6 +478,7 @@
     padding:calc(10px * var(--ui));
     text-transform:none;
   }
+
   select{
     height:calc(54px * var(--ui));
     padding:0 calc(10px * var(--ui));
@@ -452,6 +488,7 @@
     font-size:calc(18px * var(--ui));
     letter-spacing:.6px;
   }
+
   .long{
     flex:1;
     min-width:0;
@@ -460,6 +497,7 @@
     padding-left:calc(14px * var(--ui));
     text-align:left;
   }
+
   .fixedField{
     background:#f6f6f6;
     color:#111;
@@ -472,6 +510,7 @@
     padding:calc(12px * var(--ui));
     margin-top:calc(10px * var(--ui));
   }
+
   .extraHead{
     display:flex;
     justify-content:space-between;
@@ -479,11 +518,13 @@
     margin-bottom:calc(10px * var(--ui));
     text-transform:uppercase;
   }
+
   .extraTitle{
     font-size:calc(20px * var(--ui));
     font-weight:1000;
     letter-spacing:.4px;
   }
+
   .iconBtn{
     width:calc(48px * var(--ui));
     height:calc(48px * var(--ui));
@@ -496,21 +537,25 @@
     font-weight:1000;
     text-transform:uppercase;
   }
+
   .extraRow{
     display:flex;
     gap:calc(10px * var(--ui));
     align-items:center;
     margin-top:calc(10px * var(--ui));
   }
+
   .extraRow select{
     width:calc(130px * var(--ui));
     font-size:calc(16px * var(--ui));
     font-weight:1000;
   }
+
   .extraRow input{
     width:calc(130px * var(--ui));
     font-size:calc(18px * var(--ui));
   }
+
   .minusBtn{
     width:calc(60px * var(--ui));
     height:calc(54px * var(--ui));
@@ -532,6 +577,7 @@
     text-transform:uppercase;
     flex-wrap:wrap;
   }
+
   .bottomBtns button{
     padding:calc(10px * var(--ui)) calc(14px * var(--ui));
     font-size:calc(16px * var(--ui));
@@ -548,6 +594,7 @@
     align-items:center;
     z-index:90;
   }
+
   #photoLayer img{
     max-width:100%;
     max-height:100%;
@@ -564,6 +611,7 @@
     margin:calc(10px * var(--ui)) 0;
     min-width:0;
   }
+
   .rowGridTDBB{
     display:grid;
     grid-template-columns:
@@ -576,183 +624,95 @@
     min-width:0;
   }
 
-.outTimeBox{
-  background:#fff;
-  border:2px solid #e2e2e2;
-  border-radius:calc(16px * var(--ui));
-  padding:calc(12px * var(--ui));
-  margin-top:calc(10px * var(--ui));
-}
+  .outTimeBox{
+    background:#fff;
+    border:2px solid #e2e2e2;
+    border-radius:calc(16px * var(--ui));
+    padding:calc(12px * var(--ui));
+    margin-top:calc(10px * var(--ui));
+  }
 
-.outTimeTitle{
-  font-size:calc(20px * var(--ui));
-  font-weight:1000;
-  letter-spacing:.4px;
-  margin-bottom:calc(10px * var(--ui));
-  text-transform:uppercase;
-  color:#111;
-}
+  .outTimeTitle{
+    font-size:calc(20px * var(--ui));
+    font-weight:1000;
+    letter-spacing:.4px;
+    margin-bottom:calc(10px * var(--ui));
+    text-transform:uppercase;
+    color:#111;
+  }
 
-.outTimeRow{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:calc(10px * var(--ui));
-  padding:calc(8px * var(--ui)) 0;
-  border-bottom:1px solid #ececec;
-}
-
-.outTimeRow:last-child{
-  border-bottom:none;
-}
-
-.outTimeLabel{
-  flex:1;
-  min-width:0;
-  font-size:calc(13px * var(--ui));
-  font-weight:1000;
-  color:#666;
-  line-height:1.2;
-  text-transform:uppercase;
-}
-
-.outTimeRight{
-  display:flex;
-  align-items:baseline;
-  gap:calc(10px * var(--ui));
-  white-space:nowrap;
-  flex:0 0 auto;
-}
-
-.outMiniBtn{
-  border:none;
-  background:transparent;
-  box-shadow:none;
-  padding:calc(4px * var(--ui)) calc(6px * var(--ui));
-  margin:0;
-  font-weight:1000;
-  font-size:calc(15px * var(--ui));
-  color:#111;
-  border-radius:calc(10px * var(--ui));
-  text-transform:uppercase;
-}
-
-.outMiniBtn:active{
-  background:rgba(226,27,27,.08);
-}
-
-.outMiniVal{
-  min-width:calc(58px * var(--ui));
-  text-align:right;
-  font-size:calc(20px * var(--ui));
-  font-weight:1000;
-  color:var(--red);
-  font-variant-numeric:tabular-nums;
-}
-
-@media (max-width:520px){
   .outTimeRow{
-    align-items:flex-start;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:calc(10px * var(--ui));
+    padding:calc(8px * var(--ui)) 0;
+    border-bottom:1px solid #ececec;
+  }
+
+  .outTimeRow:last-child{
+    border-bottom:none;
+  }
+
+  .outTimeLabel{
+    flex:1;
+    min-width:0;
+    font-size:calc(13px * var(--ui));
+    font-weight:1000;
+    color:#666;
+    line-height:1.2;
+    text-transform:uppercase;
   }
 
   .outTimeRight{
-    flex-direction:column;
-    align-items:flex-end;
-    gap:calc(4px * var(--ui));
+    display:flex;
+    align-items:baseline;
+    gap:calc(10px * var(--ui));
+    white-space:nowrap;
+    flex:0 0 auto;
+  }
+
+  .outMiniBtn{
+    border:none;
+    background:transparent;
+    box-shadow:none;
+    padding:calc(4px * var(--ui)) calc(6px * var(--ui));
+    margin:0;
+    font-weight:1000;
+    font-size:calc(15px * var(--ui));
+    color:#111;
+    border-radius:calc(10px * var(--ui));
+    text-transform:uppercase;
+  }
+
+  .outMiniBtn:active{
+    background:rgba(226,27,27,.08);
   }
 
   .outMiniVal{
-    min-width:auto;
-  }
-}.outTimeBox{
-  background:#fff;
-  border:2px solid #e2e2e2;
-  border-radius:calc(16px * var(--ui));
-  padding:calc(12px * var(--ui));
-  margin-top:calc(10px * var(--ui));
-}
-
-.outTimeTitle{
-  font-size:calc(20px * var(--ui));
-  font-weight:1000;
-  letter-spacing:.4px;
-  margin-bottom:calc(10px * var(--ui));
-  text-transform:uppercase;
-  color:#111;
-}
-
-.outTimeRow{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:calc(10px * var(--ui));
-  padding:calc(8px * var(--ui)) 0;
-  border-bottom:1px solid #ececec;
-}
-
-.outTimeRow:last-child{
-  border-bottom:none;
-}
-
-.outTimeLabel{
-  flex:1;
-  min-width:0;
-  font-size:calc(13px * var(--ui));
-  font-weight:1000;
-  color:#666;
-  line-height:1.2;
-  text-transform:uppercase;
-}
-
-.outTimeRight{
-  display:flex;
-  align-items:baseline;
-  gap:calc(10px * var(--ui));
-  white-space:nowrap;
-  flex:0 0 auto;
-}
-
-.outMiniBtn{
-  border:none;
-  background:transparent;
-  box-shadow:none;
-  padding:calc(4px * var(--ui)) calc(6px * var(--ui));
-  margin:0;
-  font-weight:1000;
-  font-size:calc(15px * var(--ui));
-  color:#111;
-  border-radius:calc(10px * var(--ui));
-  text-transform:uppercase;
-}
-
-.outMiniBtn:active{
-  background:rgba(226,27,27,.08);
-}
-
-.outMiniVal{
-  min-width:calc(58px * var(--ui));
-  text-align:right;
-  font-size:calc(20px * var(--ui));
-  font-weight:1000;
-  color:var(--red);
-  font-variant-numeric:tabular-nums;
-}
-
-@media (max-width:520px){
-  .outTimeRow{
-    align-items:flex-start;
+    min-width:calc(58px * var(--ui));
+    text-align:right;
+    font-size:calc(20px * var(--ui));
+    font-weight:1000;
+    color:var(--red);
+    font-variant-numeric:tabular-nums;
   }
 
-  .outTimeRight{
-    flex-direction:column;
-    align-items:flex-end;
-    gap:calc(4px * var(--ui));
-  }
+  @media (max-width:520px){
+    .outTimeRow{
+      align-items:flex-start;
+    }
 
-  .outMiniVal{
-    min-width:auto;
+    .outTimeRight{
+      flex-direction:column;
+      align-items:flex-end;
+      gap:calc(4px * var(--ui));
+    }
+
+    .outMiniVal{
+      min-width:auto;
+    }
   }
-}
 </style>
 </head>
 
@@ -761,7 +721,7 @@
 <header id="homeHeader" onclick="openPhoto()" ondblclick="openPhoto()">
   <div class="titleWrap">
     <div class="titleMain">TIGER MEMO</div>
-    <div class="titleVer">VER 1.0</div>
+    <div class="titleVer">VER 2.0</div>
   </div>
 </header>
 
@@ -867,597 +827,15 @@
 
   const EXTRA_KEYS = ["CREW","C","W","TS"];
   const OUTBOUND_TIME_FIELDS = [
-  { key:"rampTeam", label:"RAMP TEAM AT PLANESIDE (-60)" },
-  { key:"cargo", label:"CARGO AT PLANESIDE (-60)" },
-  { key:"loadingCommence", label:"LOADING COMMENCE" },
-  { key:"firstBag", label:"1ST BAG PLANESIDE" },
-  { key:"loadingFinished", label:"LOADING FINISHED" },
-  { key:"finalBag", label:"FINAL BAG AT PLANESIDE" },
-  { key:"refuelTruck", label:"REFUELING TRUCK AT PLANESIDE" },
-  { key:"refuelCommence", label:"REFUELING COMMENCE" },
-  { key:"refuelFinished", label:"REFUELING FINISHED" }
-];
-
-  function onlyNum(val, len){
-    return (val || "").replace(/[^0-9]/g, "").slice(0, len);
-  }
-
-  function pad(val, len){
-    const v = onlyNum(val, len);
-    return v ? v.padStart(len, "0") : "";
-  }
-
-  function nowTime(){
-    const d = new Date();
-    return String(d.getHours()).padStart(2,"0") + ":" + String(d.getMinutes()).padStart(2,"0");
-  }
-
-  function todayStr(){
-    const d = new Date();
-    const y = d.getFullYear();
-    const m = String(d.getMonth()+1).padStart(2,"0");
-    const day = String(d.getDate()).padStart(2,"0");
-    return `${y}-${m}-${day}`;
-  }
-
-  function dateToStr(d){
-    const y = d.getFullYear();
-    const m = String(d.getMonth()+1).padStart(2,"0");
-    const day = String(d.getDate()).padStart(2,"0");
-    return `${y}-${m}-${day}`;
-  }
-
-  function getMonday(dateLike){
-    const d = new Date(dateLike);
-    d.setHours(0,0,0,0);
-    const day = d.getDay() || 7;
-    d.setDate(d.getDate() - day + 1);
-    return d;
-  }
-
-  function getSunday(dateLike){
-    const d = getMonday(dateLike);
-    d.setDate(d.getDate() + 6);
-    return d;
-  }
-
-  function getWeekKey(dateLike){
-    return dateToStr(getMonday(dateLike));
-  }
-
-  function getViewingDate(){
-    const d = new Date();
-    d.setDate(d.getDate() + weekOffset * 7);
-    return d;
-  }
-
-  function getViewingWeekKey(){
-    return getWeekKey(getViewingDate());
-  }
-
-  function updateWeekLabel(){
-    const monday = getMonday(getViewingDate());
-    const sunday = getSunday(getViewingDate());
-    weekLabel.textContent = `${dateToStr(monday)} ~ ${dateToStr(sunday)}`;
-  }
-
-  function calcWeekOffsetFromDate(dateStr){
-    const thisMonday = getMonday(new Date());
-    const targetMonday = getMonday(dateStr);
-    return Math.round((targetMonday - thisMonday) / 86400000 / 7);
-  }
-
-  function moveWeek(n){
-    weekOffset += n;
-    updateWeekLabel();
-    renderList();
-  }
-
-  function goThisWeek(){
-    weekOffset = 0;
-    updateWeekLabel();
-    renderList();
-  }
-
-  function deleteCurrentWeek(){
-    const wk = getViewingWeekKey();
-    const target = memos.filter(m => m.weekKey === wk);
-    if(!target.length){
-      alert("NO MEMO IN THIS WEEK");
-      return;
-    }
-    if(!confirm("DELETE ALL MEMOS IN THIS WEEK?")) return;
-    memos = memos.filter(m => m.weekKey !== wk);
-    localStorage.setItem("tiger_memos", JSON.stringify(memos));
-    renderList();
-  }
-
-function normalizeTimeInput(val){
-  const raw = (val || "").trim();
-  if(!raw) return "";
-  const digits = raw.replace(/[^0-9]/g, "");
-  if(digits.length === 3){
-    return digits.slice(0,1) + ":" + digits.slice(1,3);
-  }
-  if(digits.length >= 4){
-    return digits.slice(0,2) + ":" + digits.slice(2,4);
-  }
-  return raw.slic
-  document.addEventListener("input", (e)=>{
-    const t = e.target;
-    if(!(t instanceof HTMLInputElement)) return;
-    const k = t.dataset.k || "";
-    if(!k) return;
-
-    if(k === "SHARED-B"){
-      t.value = onlyNum(t.value, 5);
-      document.querySelectorAll('input[data-k="SHARED-B"]').forEach(el=>{
-        if(el !== t) el.value = t.value;
-      });
-      return;
-    }
-
-    if(k === "SHARED-HASH"){
-      t.value = onlyNum(t.value, 3);
-      document.querySelectorAll('input[data-k="SHARED-HASH"]').forEach(el=>{
-        if(el !== t) el.value = t.value;
-      });
-      return;
-    }
-
-    if(k.endsWith("-STA")) t.value = onlyNum(t.value, 4);
-    if(k.endsWith("-STD")) t.value = onlyNum(t.value, 4);
-    if(k.endsWith("-t")) t.value = onlyNum(t.value, 3);
-    if(k.endsWith("-d")) t.value = onlyNum(t.value, 2);
-    if(k.endsWith("-bb")) t.value = onlyNum(t.value, 2);
-    if(k.startsWith("extraVal-")) t.value = onlyNum(t.value, 3);
-  });
-
-  function makeExtraRow(type, key="CREW", val=""){
-    const row = document.createElement("div");
-    row.className = "extraRow";
-    row.innerHTML = `
-      <select>
-        ${EXTRA_KEYS.map(k => `<option value="${k}" ${k===key ? "selected" : ""}>${k}</option>`).join("")}
-      </select>
-      <input class="numBox" inputmode="numeric" maxlength="3" placeholder="000" data-k="extraVal-${type}" value="${onlyNum(val,3)}">
-      <button type="button" class="minusBtn" onclick="this.parentElement.remove()">-</button>
-    `;
-    return row;
-  }
-
-  function addExtraRow(type){
-    const root = sections.querySelector(`.section[data-type="${type}"]`);
-    const box = root ? root.querySelector(`#${type}-EXTRAS`) : null;
-    if(!box) return;
-    box.appendChild(makeExtraRow(type, "CREW", ""));
-  }
-
-  function makeOutboundTimeBox(saved = {}){
-  const wrap = document.createElement("div");
-  wrap.className = "outTimeBox";
-
-  wrap.innerHTML = `
-    <div class="outTimeTitle">TIME</div>
-    ${OUTBOUND_TIME_FIELDS.map(f => `
-      <div class="outTimeRow">
-        <div class="outTimeLabel">${f.label}</div>
-        <div class="outTimeRight">
-          <button type="button" class="outMiniBtn" data-outtime-btn="${f.key}">TIME</button>
-          <div class="outMiniVal" data-outtime-val="${f.key}">${saved[f.key] || ""}</div>
-        </div>
-      </div>
-    `).join("")}
-  `;
-
-  wrap.querySelectorAll("[data-outtime-btn]").forEach(btn=>{
-    btn.addEventListener("click", ()=>{
-      const key = btn.dataset.outtimeBtn;
-      const valBox = wrap.querySelector(`[data-outtime-val="${key}"]`);
-      if(valBox) valBox.textContent = nowTime();
-    });
-
-    btn.addEventListener("dblclick", ()=>{
-      const key = btn.dataset.outtimeBtn;
-      const valBox = wrap.querySelector(`[data-outtime-val="${key}"]`);
-      const cur = valBox ? (valBox.textContent || nowTime()) : nowTime();
-      const t = prompt("TIME (HH:MM 24H)", cur);
-      if(t && valBox) valBox.textContent = t;
-    });
-  });
-
-  return wrap;
-}
-
-  function makeSection(type, memoData){
-    const d = document.createElement("div");
-    d.className = "section";
-    d.dataset.type = type;
-
-    const savedTime = memoData ? (memoData[type+"-TIME"] || "") : "";
-    const sharedB = memoData ? (memoData.sharedB || "") : "";
-    const sharedHASH = memoData ? (memoData.sharedHASH || "") : "";
-    const v = (k)=> memoData ? (memoData[type+"-"+k] || "") : "";
-    const noteV = memoData ? (memoData[type+"-note"] || "") : "";
-    const staStdLabel = type === "INBOUND" ? "STA" : "STD";
-    const staStdKey = type === "INBOUND" ? "STA" : "STD";
-    const fixedItText = type === "INBOUND" ? "IT602" : "IT603";
-    const cmpt1Value = memoData ? (memoData[type+"-cmpt1"] || "F3") : "F3";
-
-    d.innerHTML = `
-      <div class="sectionHead">
-        <div class="sectionTitle">${type}</div>
-        <div class="headRight">
-          <div class="staStdWrap">
-            <div class="staStdLab">${staStdLabel}</div>
-            <input class="numBox staStdInput" inputmode="numeric" maxlength="4" placeholder="0000" data-k="${type}-${staStdKey}" value="${v(staStdKey)}">
-          </div>
-          <div class="timeWrap">
-            <button type="button" class="timeBtn" data-timebtn="${type}">TIME</button>
-            <div class="timeVal" id="${type}-TIMESHOWN">${savedTime}</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="rowGrid3">
-        <div class="lab">IT</div>
-        <input class="long fixedField" value="${fixedItText}" readonly tabindex="-1">
-        <div class="lab">B</div>
-        <input class="numBox" inputmode="numeric" maxlength="5" placeholder="00000" data-k="SHARED-B" value="${sharedB}">
-        <div class="lab">#</div>
-        <input class="numBox" inputmode="numeric" maxlength="3" placeholder="000" data-k="SHARED-HASH" value="${sharedHASH}">
-      </div>
-
-      <div class="row">
-        <div class="lab" style="min-width:96px;">CMPT 1</div>
-        <input class="long" data-k="${type}-cmpt1" value="${cmpt1Value}" placeholder="F3">
-      </div>
-
-      <div class="row">
-        <div class="lab" style="min-width:96px;">CMPT 3</div>
-        <input class="long" data-k="${type}-cmpt2" placeholder="TEXT" value="${memoData ? (memoData[type+"-cmpt2"] || "") : ""}">
-      </div>
-
-      <div class="row">
-        <div class="lab" style="min-width:96px;">CMPT 4</div>
-        <input class="long" data-k="${type}-cmpt3" placeholder="TEXT" value="${memoData ? (memoData[type+"-cmpt3"] || "") : ""}">
-      </div>
-
-      <div class="row">
-        <div class="lab" style="min-width:96px;">CMPT 5</div>
-        <input class="long" data-k="${type}-cmpt4" placeholder="TEXT" value="${memoData ? (memoData[type+"-cmpt4"] || "") : ""}">
-      </div>
-
-      <div class="rowGridTDBB">
-        <div class="lab">T</div>
-        <input class="numBox" inputmode="numeric" maxlength="3" placeholder="000" data-k="${type}-t" value="${v("t")}">
-        <div class="lab">D</div>
-        <input class="numBox" inputmode="numeric" maxlength="2" placeholder="00" data-k="${type}-d" value="${v("d")}">
-        <div class="lab">BB</div>
-        <input class="numBox" inputmode="numeric" maxlength="2" placeholder="00" data-k="${type}-bb" value="${v("bb")}">
-      </div>
-
-      <div class="extraBox">
-        <div class="extraHead">
-          <div class="extraTitle">EXTRA</div>
-          <button type="button" class="iconBtn" onclick="addExtraRow('${type}')">+</button>
-        </div>
-        <div id="${type}-EXTRAS"></div>
-      </div>
-
-      <textarea data-k="${type}-note" placeholder="NOTE (${type})">${noteV}</textarea>
-    `;
-
-    const timeBtn = d.querySelector(`[data-timebtn="${type}"]`);
-    const timeShown = d.querySelector(`#${type}-TIMESHOWN`);
-
-    timeBtn.addEventListener("click", ()=>{
-      timeShown.textContent = nowTime();
-    });
-
-    timeBtn.addEventListener("dblclick", ()=>{
-      const cur = timeShown.textContent || nowTime();
-      const t = prompt("TIME (HH:MM 24H)", cur);
-      if(t) timeShown.textContent = t;
-    });
-
-    const extrasBox = d.querySelector(`#${type}-EXTRAS`);
-    const extras = memoData ? (memoData[type+"-EXTRAS"] || []) : [];
-    extras.forEach(ex => extrasBox.appendChild(makeExtraRow(type, ex.key, ex.val)));
-
-    if(type === "OUTBOUND"){
-      const savedTimes = memoData ? (memoData["OUTBOUND-TIMES"] || {}) : {};
-      const outTimeBox = makeOutboundTimeBox(savedTimes);
-      const textArea = d.querySelector(`textarea[data-k="${type}-note"]`);
-      d.insertBefore(outTimeBox, textArea);
-    }
-
-    return d;
-  }
-
-  function buildFixedSections(memoData){
-    sections.innerHTML = "";
-    sections.appendChild(makeSection("INBOUND", memoData));
-    sections.appendChild(makeSection("OUTBOUND", memoData));
-  }
-
-  function newMemo(){
-    editId = null;
-    memoDate.value = todayStr();
-    buildFixedSections(null);
-    openModal();
-  }
-
-  function openModal(){
-    modal.style.display = "flex";
-    modal.setAttribute("aria-hidden","false");
-    equipBtn.style.display = "none";
-    equipBadge.style.display = "none";
-    sheet.style.transform = "translateY(0)";
-    currentTranslate = 0;
-  }
-
-  function closeModal(){
-    modal.style.display = "none";
-    modal.setAttribute("aria-hidden","true");
-    editId = null;
-    equipBtn.style.display = "block";
-    updateEquipBadge();
-  }
-
-  function saveMemo(){
-    const data = { id: editId ?? Date.now(), hasIn:true, hasOut:true };
-
-    data.memoDate = memoDate.value || todayStr();
-    data.weekKey = getWeekKey(data.memoDate);
-
-    data.sharedB = pad(document.querySelector('input[data-k="SHARED-B"]')?.value || "", 5);
-    data.sharedHASH = pad(document.querySelector('input[data-k="SHARED-HASH"]')?.value || "", 3);
-
-    ["INBOUND","OUTBOUND"].forEach(type=>{
-      const root = sections.querySelector(`.section[data-type="${type}"]`);
-      if(!root) return;
-
-      const gi = (k)=> root.querySelector(`input[data-k="${type}-${k}"]`);
-      const cm = (n)=> root.querySelector(`input[data-k="${type}-cmpt${n}"]`);
-      const note = root.querySelector(`textarea[data-k="${type}-note"]`);
-
-      data[type+"-STA"] = type==="INBOUND" ? pad(gi("STA")?.value, 4) : "";
-      data[type+"-STD"] = type==="OUTBOUND" ? pad(gi("STD")?.value, 4) : "";
-
-      data[type+"-t"]  = pad(gi("t")?.value, 3);
-      data[type+"-d"]  = pad(gi("d")?.value, 2);
-      data[type+"-bb"] = pad(gi("bb")?.value, 2);
-
-      data[type+"-cmpt1"] = (cm(1)?.value || "F3").trim() || "F3";
-      data[type+"-cmpt2"] = cm(2)?.value || "";
-      data[type+"-cmpt3"] = cm(3)?.value || "";
-      data[type+"-cmpt4"] = cm(4)?.value || "";
-
-      data[type+"-note"] = note ? (note.value || "") : "";
-
-      const shown = document.getElementById(type+"-TIMESHOWN");
-      data[type+"-TIME"] = shown ? (shown.textContent || "") : "";
-
-      const extras = [];
-      const box = root.querySelector(`#${type}-EXTRAS`);
-      if(box){
-        [...box.querySelectorAll(".extraRow")].forEach(r=>{
-          const key = (r.querySelector("select")?.value || "").toUpperCase();
-          const val = pad(r.querySelector("input")?.value || "", 3);
-          if(key && val) extras.push({key, val});
-        });
-      }
-      data[type+"-EXTRAS"] = extras;
-    });
-
-   const outRoot = sections.querySelector('.section[data-type="OUTBOUND"]');
-const outTimes = {};
-if(outRoot){
-  outRoot.querySelectorAll("[data-outtime-val]").forEach(el=>{
-    const key = el.dataset.outtimeVal;
-    outTimes[key] = normalizeTimeInput(el.textContent || "");
-  });
-}
-data["OUTBOUND-TIMES"] = outTimes;
-    if(editId){
-      const idx = memos.findIndex(m=>m.id===editId);
-      if(idx >= 0) memos[idx] = data;
-    }else{
-      memos.push(data);
-    }
-
-    localStorage.setItem("tiger_memos", JSON.stringify(memos));
-    weekOffset = calcWeekOffsetFromDate(data.memoDate);
-    updateWeekLabel();
-    closeModal();
-    renderList(data.id);
-  }
-
-  function formatTitleLine(m, type){
-    const b = (m.sharedB || "").trim();
-    const hash = (m.sharedHASH || "").trim();
-    const it = type === "INBOUND" ? "IT602" : "IT603";
-    if(type === "INBOUND") return `${it} B[${b}]`;
-    return `${it} #[${hash}]`;
-  }
-
-  function renderList(flashId){
-    memoList.innerHTML = "";
-
-    const viewingWeek = getViewingWeekKey();
-    const weekMemos = memos
-      .filter(m => (m.weekKey || getWeekKey(m.memoDate || todayStr())) === viewingWeek)
-      .sort((a,b)=>{
-        const da = a.memoDate || "";
-        const db = b.memoDate || "";
-        if(da === db) return Number(a.id) - Number(b.id);
-        return da < db ? -1 : 1;
-      });
-
-    if(!weekMemos.length){
-      memoList.innerHTML = `<div class="emptyWeek">NO MEMO IN THIS WEEK</div>`;
-      return;
-    }
-
-    weekMemos.forEach(m=>{
-      const card = document.createElement("div");
-      card.className = "memoCard" + (m.id===flashId ? " flash" : "");
-      card.innerHTML = `
-        <div class="memoRow">
-          <input class="selBox" type="checkbox" data-id="${m.id}">
-          <div class="lines" data-open="${m.id}">
-            <div class="line"><div class="tagPill">IN</div><div class="textPill">${formatTitleLine(m, "INBOUND")}</div></div>
-            <div class="line"><div class="tagPill">OUT</div><div class="textPill">${formatTitleLine(m, "OUTBOUND")}</div></div>
-          </div>
-        </div>
-        <div class="datePill">${m.memoDate || ""}</div>
-      `;
-      memoList.appendChild(card);
-    });
-
-    memoList.querySelectorAll("[data-open]").forEach(el=>{
-      el.addEventListener("click", ()=>{
-        const id = Number(el.getAttribute("data-open"));
-        editMemo(id);
-      });
-    });
-  }
-
-  function editMemo(id){
-    const m = memos.find(x=>x.id===id);
-    if(!m) return;
-    editId = id;
-    memoDate.value = m.memoDate || todayStr();
-    buildFixedSections(m);
-    document.querySelectorAll('input[data-k="SHARED-B"]').forEach(el => el.value = m.sharedB || "");
-    document.querySelectorAll('input[data-k="SHARED-HASH"]').forEach(el => el.value = m.sharedHASH || "");
-    openModal();
-  }
-
-  function deleteSelected(){
-    const checks = document.querySelectorAll('.selBox:checked');
-    const ids = [...checks].map(c=>Number(c.dataset.id));
-    memos = memos.filter(m=>!ids.includes(m.id));
-    localStorage.setItem("tiger_memos", JSON.stringify(memos));
-    renderList();
-  }
-
-  function addPhoto(){
-    photoInput.value = "";
-    photoInput.click();
-  }
-
-  photoInput.onchange = (e)=>{
-    const f = e.target.files && e.target.files[0];
-    if(!f) return;
-    const r = new FileReader();
-    r.onload = ()=>{
-      photo = r.result;
-      localStorage.setItem("tiger_photo", photo);
-    };
-    r.readAsDataURL(f);
-  };
-
-  function openPhoto(){
-    if(!photo) return;
-    photoImg.src = photo;
-    photoLayer.style.display = "flex";
-  }
-
-  function closePhoto(){
-    photoLayer.style.display = "none";
-  }
-
-  function openEquip(){
-    const eq = JSON.parse(localStorage.getItem("tiger_equipment") || "{}");
-    tug1.value = pad(eq.tug1,2);
-    tug2.value = pad(eq.tug2,2);
-    belt.value = pad(eq.belt,2);
-    equipModal.style.display = "flex";
-    equipModal.setAttribute("aria-hidden","false");
-  }
-
-  function closeEquip(){
-    equipModal.style.display = "none";
-    equipModal.setAttribute("aria-hidden","true");
-  }
-
-  function saveEquip(){
-    const eq = {
-      tug1: pad(tug1.value,2),
-      tug2: pad(tug2.value,2),
-      belt: pad(belt.value,2)
-    };
-    localStorage.setItem("tiger_equipment", JSON.stringify(eq));
-    updateEquipBadge();
-    closeEquip();
-  }
-
-  function updateEquipBadge(){
-    const eq = JSON.parse(localStorage.getItem("tiger_equipment") || "{}");
-    if(!eq.tug1 && !eq.tug2 && !eq.belt){
-      equipBadge.style.display = "none";
-      return;
-    }
-    const t1 = eq.tug1 || "00";
-    const t2 = eq.tug2 || "00";
-    const b = eq.belt || "00";
-    equipBadge.innerHTML = `
-      <div class="b1">TUG ${t1}/${t2}</div>
-      <div class="b2">BELT ${b}</div>
-    `;
-    equipBadge.style.display = "block";
-  }
-
-  equipModal.addEventListener("click",(e)=>{
-    if(e.target === equipModal) closeEquip();
-  });
-
-  let startY = 0;
-  let currentTranslate = 0;
-  let dragging = false;
-
-  function onStart(y){
-    dragging = true;
-    startY = y;
-    sheet.style.transition = "none";
-  }
-
-  function onMove(y){
-    if(!dragging) return;
-    const dy = Math.max(0, y - startY);
-    currentTranslate = dy;
-    sheet.style.transform = `translateY(${dy}px)`;
-  }
-
-  function onEnd(){
-    if(!dragging) return;
-    dragging = false;
-    sheet.style.transition = "transform .18s ease";
-    if(currentTranslate > 140){
-      closeModal();
-    }else{
-      sheet.style.transform = "translateY(0)";
-      currentTranslate = 0;
-    }
-  }
-
-  dragArea.addEventListener("touchstart", (e)=> onStart(e.touches[0].clientY), {passive:true});
-  dragArea.addEventListener("touchmove",  (e)=> onMove(e.touches[0].clientY),  {passive:true});
-  dragArea.addEventListener("touchend",   ()=> onEnd());
-
-  dragArea.addEventListener("mousedown", (e)=> onStart(e.clientY));
-  window.addEventListener("mousemove", (e)=> onMove(e.clientY));
-  window.addEventListener("mouseup", ()=> onEnd());
-
-  memoDate.value = todayStr();
-  updateWeekLabel();
-  renderList();
-  updateEquipBadge();
-</script>
-
-</body>
-</html>
-
-
+    { key:"rampTeam", label:"RAMP TEAM AT PLANESIDE (-60)" },
+    { key:"cargo", label:"CARGO AT PLANESIDE (-60)" },
+    { key:"loadingCommence", label:"LOADING COMMENCE" },
+    { key:"firstBag", label:"1ST BAG PLANESIDE" },
+    { key:"loadingFinished", label:"LOADING FINISHED" },
+    { key:"finalBag", label:"FINAL BAG AT PLANESIDE" },
+    { key:"refuelTruck", label:"REFUELING TRUCK AT PLANESIDE" },
+    { key:"refuelCommence", label:"REFUELING COMMENCE" },
+    { key:"refuelFinished", label:"REFUELING FINISHED" }
+  ];
+
+  
