@@ -972,12 +972,17 @@
     renderList();
   }
 
-  function normalizeTimeInput(val){
-    const raw = (val || "").trim();
-    if(!raw) return "";
-    return raw.slice(0,5);
+function normalizeTimeInput(val){
+  const raw = (val || "").trim();
+  if(!raw) return "";
+  const digits = raw.replace(/[^0-9]/g, "");
+  if(digits.length === 3){
+    return digits.slice(0,1) + ":" + digits.slice(1,3);
   }
-
+  if(digits.length >= 4){
+    return digits.slice(0,2) + ":" + digits.slice(2,4);
+  }
+  return raw.slic
   document.addEventListener("input", (e)=>{
     const t = e.target;
     if(!(t instanceof HTMLInputElement)) return;
@@ -1028,30 +1033,41 @@
     box.appendChild(makeExtraRow(type, "CREW", ""));
   }
 
-  function makeOutboundTimeBox(saved={}){
-    const wrap = document.createElement("div");
-    wrap.className = "outTimeBox";
-    wrap.innerHTML = `
-      <div class="outTimeHead">
-        <div class="outTimeTitle">TIME</div>
+  function makeOutboundTimeBox(saved = {}){
+  const wrap = document.createElement("div");
+  wrap.className = "outTimeBox";
+
+  wrap.innerHTML = `
+    <div class="outTimeTitle">TIME</div>
+    ${OUTBOUND_TIME_FIELDS.map(f => `
+      <div class="outTimeRow">
+        <div class="outTimeLabel">${f.label}</div>
+        <div class="outTimeRight">
+          <button type="button" class="outMiniBtn" data-outtime-btn="${f.key}">TIME</button>
+          <div class="outMiniVal" data-outtime-val="${f.key}">${saved[f.key] || ""}</div>
+        </div>
       </div>
-      <div class="outTimeGrid">
-        ${OUTBOUND_TIME_FIELDS.map(f => `
-          <div class="outTimeItem">
-            <label>${f.label}</label>
-            <input
-              class="outTimeInput"
-              type="time"
-              step="60"
-              data-outtime="${f.key}"
-              value="${saved[f.key] || ""}"
-            >
-          </div>
-        `).join("")}
-      </div>
-    `;
-    return wrap;
-  }
+    `).join("")}
+  `;
+
+  wrap.querySelectorAll("[data-outtime-btn]").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      const key = btn.dataset.outtimeBtn;
+      const valBox = wrap.querySelector(`[data-outtime-val="${key}"]`);
+      if(valBox) valBox.textContent = nowTime();
+    });
+
+    btn.addEventListener("dblclick", ()=>{
+      const key = btn.dataset.outtimeBtn;
+      const valBox = wrap.querySelector(`[data-outtime-val="${key}"]`);
+      const cur = valBox ? (valBox.textContent || nowTime()) : nowTime();
+      const t = prompt("TIME (HH:MM 24H)", cur);
+      if(t && valBox) valBox.textContent = t;
+    });
+  });
+
+  return wrap;
+}
 
   function makeSection(type, memoData){
     const d = document.createElement("div");
@@ -1235,16 +1251,15 @@
       data[type+"-EXTRAS"] = extras;
     });
 
-    const outRoot = sections.querySelector('.section[data-type="OUTBOUND"]');
-    const outTimes = {};
-    if(outRoot){
-      outRoot.querySelectorAll("[data-outtime]").forEach(input=>{
-        const key = input.dataset.outtime;
-        outTimes[key] = normalizeTimeInput(input.value);
-      });
-    }
-    data["OUTBOUND-TIMES"] = outTimes;
-
+   const outRoot = sections.querySelector('.section[data-type="OUTBOUND"]');
+const outTimes = {};
+if(outRoot){
+  outRoot.querySelectorAll("[data-outtime-val]").forEach(el=>{
+    const key = el.dataset.outtimeVal;
+    outTimes[key] = normalizeTimeInput(el.textContent || "");
+  });
+}
+data["OUTBOUND-TIMES"] = outTimes;
     if(editId){
       const idx = memos.findIndex(m=>m.id===editId);
       if(idx >= 0) memos[idx] = data;
@@ -1444,4 +1459,5 @@
 
 </body>
 </html>
+
 
