@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<title>TIGER MEMO VER 5.1</title>
+<title>TIGER MEMO VER 1.0</title>
 
 <style>
   :root{
@@ -577,6 +577,57 @@
     margin:calc(10px * var(--ui)) 0;
     min-width:0;
   }
+
+  .outTimeBox{
+    background:#fff;
+    border:2px solid #e2e2e2;
+    border-radius:calc(16px * var(--ui));
+    padding:calc(12px * var(--ui));
+    margin-top:calc(10px * var(--ui));
+  }
+  .outTimeHead{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:calc(10px * var(--ui));
+    margin-bottom:calc(10px * var(--ui));
+  }
+  .outTimeTitle{
+    font-size:calc(20px * var(--ui));
+    font-weight:1000;
+    letter-spacing:.4px;
+    text-transform:uppercase;
+    color:#111;
+  }
+  .outTimeGrid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:calc(10px * var(--ui)) calc(12px * var(--ui));
+  }
+  .outTimeItem{
+    min-width:0;
+  }
+  .outTimeItem label{
+    display:block;
+    font-size:calc(12px * var(--ui));
+    font-weight:1000;
+    color:#666;
+    margin-bottom:calc(6px * var(--ui));
+    line-height:1.2;
+    text-transform:uppercase;
+  }
+  .outTimeInput{
+    width:100%;
+    text-align:center;
+    padding-left:calc(10px * var(--ui));
+    padding-right:calc(10px * var(--ui));
+  }
+
+  @media (max-width:520px){
+    .outTimeGrid{
+      grid-template-columns:1fr;
+    }
+  }
 </style>
 </head>
 
@@ -585,7 +636,7 @@
 <header id="homeHeader" onclick="openPhoto()" ondblclick="openPhoto()">
   <div class="titleWrap">
     <div class="titleMain">TIGER MEMO</div>
-    <div class="titleVer">VER 5.1</div>
+    <div class="titleVer">VER 1.0</div>
   </div>
 </header>
 
@@ -690,6 +741,17 @@
   let weekOffset = 0;
 
   const EXTRA_KEYS = ["CREW","C","W","TS"];
+  const OUTBOUND_TIME_FIELDS = [
+    { key:"rampTeam", label:"RAMP TEAM AT PLANESIDE (-60)" },
+    { key:"cargo", label:"CARGO AT PLANESIDE (-60)" },
+    { key:"loadingCommence", label:"LOADING COMMENCE" },
+    { key:"firstBag", label:"1ST BAG PLANESIDE" },
+    { key:"loadingFinished", label:"LOADING FINISHED" },
+    { key:"finalBag", label:"FINAL BAG AT PLANESIDE" },
+    { key:"refuelTruck", label:"REFUELING TRUCK AT PLANESIDE" },
+    { key:"refuelCommence", label:"REFUELING COMMENCE" },
+    { key:"refuelFinished", label:"REFUELING FINISHED" }
+  ];
 
   function onlyNum(val, len){
     return (val || "").replace(/[^0-9]/g, "").slice(0, len);
@@ -771,6 +833,12 @@
     renderList();
   }
 
+  function normalizeTimeInput(val){
+    const raw = (val || "").trim();
+    if(!raw) return "";
+    return raw.slice(0,5);
+  }
+
   document.addEventListener("input", (e)=>{
     const t = e.target;
     if(!(t instanceof HTMLInputElement)) return;
@@ -813,10 +881,35 @@
   }
 
   function addExtraRow(type){
-    const root = sections.querySelector(`.section[data-type="${type}"]`);
-    const box = root ? root.querySelector(`#${type}-EXTRAS`) : null;
+    const root = sections.querySelector(\`.section[data-type="\${type}"]\`);
+    const box = root ? root.querySelector(\`#\${type}-EXTRAS\`) : null;
     if(!box) return;
     box.appendChild(makeExtraRow(type, "CREW", ""));
+  }
+
+  function makeOutboundTimeBox(saved={}){
+    const wrap = document.createElement("div");
+    wrap.className = "outTimeBox";
+    wrap.innerHTML = `
+      <div class="outTimeHead">
+        <div class="outTimeTitle">TIME</div>
+      </div>
+      <div class="outTimeGrid">
+        ${OUTBOUND_TIME_FIELDS.map(f => `
+          <div class="outTimeItem">
+            <label>${f.label}</label>
+            <input
+              class="outTimeInput"
+              type="time"
+              step="60"
+              data-outtime="${f.key}"
+              value="${saved[f.key] || ""}"
+            >
+          </div>
+        `).join("")}
+      </div>
+    `;
+    return wrap;
   }
 
   function makeSection(type, memoData){
@@ -832,6 +925,7 @@
     const staStdLabel = type === "INBOUND" ? "STA" : "STD";
     const staStdKey = type === "INBOUND" ? "STA" : "STD";
     const fixedItText = type === "INBOUND" ? "IT602" : "IT603";
+    const cmpt1Value = memoData ? (memoData[type+"-cmpt1"] || "F3") : "F3";
 
     d.innerHTML = `
       <div class="sectionHead">
@@ -859,7 +953,7 @@
 
       <div class="row">
         <div class="lab" style="min-width:96px;">CMPT 1</div>
-        <input class="long fixedField" data-k="${type}-cmpt1" value="F3" readonly tabindex="-1">
+        <input class="long" data-k="${type}-cmpt1" value="${cmpt1Value}" placeholder="F3">
       </div>
       <div class="row">
         <div class="lab" style="min-width:96px;">CMPT 3</div>
@@ -907,6 +1001,13 @@
     const extras = memoData ? (memoData[type+"-EXTRAS"] || []) : [];
     extras.forEach(ex => extrasBox.appendChild(makeExtraRow(type, ex.key, ex.val)));
 
+    if(type === "OUTBOUND"){
+      const savedTimes = memoData ? (memoData["OUTBOUND-TIMES"] || {}) : {};
+      const outTimeBox = makeOutboundTimeBox(savedTimes);
+      const textArea = d.querySelector(`textarea[data-k="${type}-note"]`);
+      d.insertBefore(outTimeBox, textArea);
+    }
+
     return d;
   }
 
@@ -950,12 +1051,12 @@
     data.sharedHASH = pad(document.querySelector('input[data-k="SHARED-HASH"]')?.value || "", 3);
 
     ["INBOUND","OUTBOUND"].forEach(type=>{
-      const root = sections.querySelector(`.section[data-type="${type}"]`);
+      const root = sections.querySelector(\`.section[data-type="\${type}"]\`);
       if(!root) return;
 
-      const gi = (k)=> root.querySelector(`input[data-k="${type}-${k}"]`);
-      const cm = (n)=> root.querySelector(`input[data-k="${type}-cmpt${n}"]`);
-      const note = root.querySelector(`textarea[data-k="${type}-note"]`);
+      const gi = (k)=> root.querySelector(\`input[data-k="\${type}-\${k}"]\`);
+      const cm = (n)=> root.querySelector(\`input[data-k="\${type}-cmpt\${n}"]\`);
+      const note = root.querySelector(\`textarea[data-k="\${type}-note"]\`);
 
       data[type+"-STA"] = type==="INBOUND" ? pad(gi("STA")?.value, 4) : "";
       data[type+"-STD"] = type==="OUTBOUND" ? pad(gi("STD")?.value, 4) : "";
@@ -964,7 +1065,7 @@
       data[type+"-d"]  = pad(gi("d")?.value, 2);
       data[type+"-bb"] = pad(gi("bb")?.value, 2);
 
-      data[type+"-cmpt1"] = "F3";
+      data[type+"-cmpt1"] = (cm(1)?.value || "F3").trim() || "F3";
       data[type+"-cmpt2"] = cm(2)?.value || "";
       data[type+"-cmpt3"] = cm(3)?.value || "";
       data[type+"-cmpt4"] = cm(4)?.value || "";
@@ -975,7 +1076,7 @@
       data[type+"-TIME"] = shown ? (shown.textContent || "") : "";
 
       const extras = [];
-      const box = root.querySelector(`#${type}-EXTRAS`);
+      const box = root.querySelector(\`#\${type}-EXTRAS\`);
       if(box){
         [...box.querySelectorAll(".extraRow")].forEach(r=>{
           const key = (r.querySelector("select")?.value || "").toUpperCase();
@@ -985,6 +1086,16 @@
       }
       data[type+"-EXTRAS"] = extras;
     });
+
+    const outRoot = sections.querySelector('.section[data-type="OUTBOUND"]');
+    const outTimes = {};
+    if(outRoot){
+      outRoot.querySelectorAll("[data-outtime]").forEach(input=>{
+        const key = input.dataset.outtime;
+        outTimes[key] = normalizeTimeInput(input.value);
+      });
+    }
+    data["OUTBOUND-TIMES"] = outTimes;
 
     if(editId){
       const idx = memos.findIndex(m=>m.id===editId);
