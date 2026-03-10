@@ -576,56 +576,183 @@
     min-width:0;
   }
 
-  .outTimeBox{
-    background:#fff;
-    border:2px solid #e2e2e2;
-    border-radius:calc(16px * var(--ui));
-    padding:calc(12px * var(--ui));
-    margin-top:calc(10px * var(--ui));
-  }
-  .outTimeHead{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    gap:calc(10px * var(--ui));
-    margin-bottom:calc(10px * var(--ui));
-  }
-  .outTimeTitle{
-    font-size:calc(20px * var(--ui));
-    font-weight:1000;
-    letter-spacing:.4px;
-    text-transform:uppercase;
-    color:#111;
-  }
-  .outTimeGrid{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:calc(10px * var(--ui)) calc(12px * var(--ui));
-  }
-  .outTimeItem{
-    min-width:0;
-  }
-  .outTimeItem label{
-    display:block;
-    font-size:calc(12px * var(--ui));
-    font-weight:1000;
-    color:#666;
-    margin-bottom:calc(6px * var(--ui));
-    line-height:1.2;
-    text-transform:uppercase;
-  }
-  .outTimeInput{
-    width:100%;
-    text-align:center;
-    padding-left:calc(10px * var(--ui));
-    padding-right:calc(10px * var(--ui));
+.outTimeBox{
+  background:#fff;
+  border:2px solid #e2e2e2;
+  border-radius:calc(16px * var(--ui));
+  padding:calc(12px * var(--ui));
+  margin-top:calc(10px * var(--ui));
+}
+
+.outTimeTitle{
+  font-size:calc(20px * var(--ui));
+  font-weight:1000;
+  letter-spacing:.4px;
+  margin-bottom:calc(10px * var(--ui));
+  text-transform:uppercase;
+  color:#111;
+}
+
+.outTimeRow{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:calc(10px * var(--ui));
+  padding:calc(8px * var(--ui)) 0;
+  border-bottom:1px solid #ececec;
+}
+
+.outTimeRow:last-child{
+  border-bottom:none;
+}
+
+.outTimeLabel{
+  flex:1;
+  min-width:0;
+  font-size:calc(13px * var(--ui));
+  font-weight:1000;
+  color:#666;
+  line-height:1.2;
+  text-transform:uppercase;
+}
+
+.outTimeRight{
+  display:flex;
+  align-items:baseline;
+  gap:calc(10px * var(--ui));
+  white-space:nowrap;
+  flex:0 0 auto;
+}
+
+.outMiniBtn{
+  border:none;
+  background:transparent;
+  box-shadow:none;
+  padding:calc(4px * var(--ui)) calc(6px * var(--ui));
+  margin:0;
+  font-weight:1000;
+  font-size:calc(15px * var(--ui));
+  color:#111;
+  border-radius:calc(10px * var(--ui));
+  text-transform:uppercase;
+}
+
+.outMiniBtn:active{
+  background:rgba(226,27,27,.08);
+}
+
+.outMiniVal{
+  min-width:calc(58px * var(--ui));
+  text-align:right;
+  font-size:calc(20px * var(--ui));
+  font-weight:1000;
+  color:var(--red);
+  font-variant-numeric:tabular-nums;
+}
+
+@media (max-width:520px){
+  .outTimeRow{
+    align-items:flex-start;
   }
 
-  @media (max-width:520px){
-    .outTimeGrid{
-      grid-template-columns:1fr;
-    }
+  .outTimeRight{
+    flex-direction:column;
+    align-items:flex-end;
+    gap:calc(4px * var(--ui));
   }
+
+  .outMiniVal{
+    min-width:auto;
+  }
+}.outTimeBox{
+  background:#fff;
+  border:2px solid #e2e2e2;
+  border-radius:calc(16px * var(--ui));
+  padding:calc(12px * var(--ui));
+  margin-top:calc(10px * var(--ui));
+}
+
+.outTimeTitle{
+  font-size:calc(20px * var(--ui));
+  font-weight:1000;
+  letter-spacing:.4px;
+  margin-bottom:calc(10px * var(--ui));
+  text-transform:uppercase;
+  color:#111;
+}
+
+.outTimeRow{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:calc(10px * var(--ui));
+  padding:calc(8px * var(--ui)) 0;
+  border-bottom:1px solid #ececec;
+}
+
+.outTimeRow:last-child{
+  border-bottom:none;
+}
+
+.outTimeLabel{
+  flex:1;
+  min-width:0;
+  font-size:calc(13px * var(--ui));
+  font-weight:1000;
+  color:#666;
+  line-height:1.2;
+  text-transform:uppercase;
+}
+
+.outTimeRight{
+  display:flex;
+  align-items:baseline;
+  gap:calc(10px * var(--ui));
+  white-space:nowrap;
+  flex:0 0 auto;
+}
+
+.outMiniBtn{
+  border:none;
+  background:transparent;
+  box-shadow:none;
+  padding:calc(4px * var(--ui)) calc(6px * var(--ui));
+  margin:0;
+  font-weight:1000;
+  font-size:calc(15px * var(--ui));
+  color:#111;
+  border-radius:calc(10px * var(--ui));
+  text-transform:uppercase;
+}
+
+.outMiniBtn:active{
+  background:rgba(226,27,27,.08);
+}
+
+.outMiniVal{
+  min-width:calc(58px * var(--ui));
+  text-align:right;
+  font-size:calc(20px * var(--ui));
+  font-weight:1000;
+  color:var(--red);
+  font-variant-numeric:tabular-nums;
+}
+
+@media (max-width:520px){
+  .outTimeRow{
+    align-items:flex-start;
+  }
+
+  .outTimeRight{
+    flex-direction:column;
+    align-items:flex-end;
+    gap:calc(4px * var(--ui));
+  }
+
+  .outMiniVal{
+    min-width:auto;
+  }
+}
 </style>
 </head>
 
@@ -740,16 +867,16 @@
 
   const EXTRA_KEYS = ["CREW","C","W","TS"];
   const OUTBOUND_TIME_FIELDS = [
-    { key:"rampTeam", label:"RAMP TEAM AT PLANESIDE (-60)" },
-    { key:"cargo", label:"CARGO AT PLANESIDE (-60)" },
-    { key:"loadingCommence", label:"LOADING COMMENCE" },
-    { key:"firstBag", label:"1ST BAG PLANESIDE" },
-    { key:"loadingFinished", label:"LOADING FINISHED" },
-    { key:"finalBag", label:"FINAL BAG AT PLANESIDE" },
-    { key:"refuelTruck", label:"REFUELING TRUCK AT PLANESIDE" },
-    { key:"refuelCommence", label:"REFUELING COMMENCE" },
-    { key:"refuelFinished", label:"REFUELING FINISHED" }
-  ];
+  { key:"rampTeam", label:"RAMP TEAM AT PLANESIDE (-60)" },
+  { key:"cargo", label:"CARGO AT PLANESIDE (-60)" },
+  { key:"loadingCommence", label:"LOADING COMMENCE" },
+  { key:"firstBag", label:"1ST BAG PLANESIDE" },
+  { key:"loadingFinished", label:"LOADING FINISHED" },
+  { key:"finalBag", label:"FINAL BAG AT PLANESIDE" },
+  { key:"refuelTruck", label:"REFUELING TRUCK AT PLANESIDE" },
+  { key:"refuelCommence", label:"REFUELING COMMENCE" },
+  { key:"refuelFinished", label:"REFUELING FINISHED" }
+];
 
   function onlyNum(val, len){
     return (val || "").replace(/[^0-9]/g, "").slice(0, len);
@@ -1317,3 +1444,4 @@
 
 </body>
 </html>
+
