@@ -3,13 +3,12 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-<title>TIGER MEMO VER 2.2</title>
+<title>TIGER MEMO VER 2.3</title>
 
 <style>
   :root{
     --bg1:#f7e36a;
     --bg2:#f2d22a;
-    --pill:#111;
     --blue:#2f7df6;
     --red:#e20000;
     --line:#cfcfcf;
@@ -49,6 +48,7 @@
     font-weight:1000;
     letter-spacing:-1px;
     text-transform:uppercase;
+    line-height:1;
   }
 
   .titleVer{
@@ -505,12 +505,23 @@
     min-width:0;
   }
 
+  .rowGridTTTB{
+    display:grid;
+    grid-template-columns:
+      calc(26px * var(--ui)) 1fr
+      calc(26px * var(--ui)) 1fr;
+    gap:calc(10px * var(--ui));
+    align-items:center;
+    margin:calc(10px * var(--ui)) 0;
+    min-width:0;
+  }
+
   .outTimeBox{
     background:#fff;
     border:2px solid #e2e2e2;
     border-radius:calc(16px * var(--ui));
     padding:calc(12px * var(--ui));
-    margin-top:calc(10px * var(--ui));
+    margin:calc(10px * var(--ui)) 0;
   }
 
   .outTimeTitle{
@@ -602,7 +613,7 @@
 <header>
   <div class="titleWrap">
     <div class="titleMain">TIGER MEMO</div>
-    <div class="titleVer">VER 2.2</div>
+    <div class="titleVer">VER 2.3</div>
   </div>
 </header>
 
@@ -640,7 +651,7 @@
   const sections = document.getElementById("sections");
   const memoList = document.getElementById("memoList");
 
-  let memos = JSON.parse(localStorage.getItem("tiger_memos_simple") || "[]");
+  let memos = JSON.parse(localStorage.getItem("tiger_memos_simple_v23") || "[]");
   let editId = null;
 
   const EXTRA_KEYS = ["CREW","C","W","TS"];
@@ -710,6 +721,8 @@
     if(k.endsWith("-t")) t.value = onlyNum(t.value, 3);
     if(k.endsWith("-d")) t.value = onlyNum(t.value, 2);
     if(k.endsWith("-bb")) t.value = onlyNum(t.value, 2);
+    if(k.endsWith("-tt")) t.value = onlyNum(t.value, 4);
+    if(k.endsWith("-tb")) t.value = onlyNum(t.value, 4);
     if(k.startsWith("extraVal-")) t.value = onlyNum(t.value, 3);
   });
 
@@ -837,6 +850,15 @@
         <input class="numBox" inputmode="numeric" maxlength="2" placeholder="00" data-k="${type}-bb" value="${v("bb")}">
       </div>
 
+      ${type === "OUTBOUND" ? `
+      <div class="rowGridTTTB">
+        <div class="lab">T/T</div>
+        <input class="numBox" inputmode="numeric" maxlength="4" placeholder="0000" data-k="${type}-tt" value="${v("tt")}">
+        <div class="lab">T/B</div>
+        <input class="numBox" inputmode="numeric" maxlength="4" placeholder="0000" data-k="${type}-tb" value="${v("tb")}">
+      </div>
+      ` : ""}
+
       <div class="extraBox">
         <div class="extraHead">
           <div class="extraTitle">EXTRA</div>
@@ -865,25 +887,25 @@
     const extras = memoData ? (memoData[type+"-EXTRAS"] || []) : [];
     extras.forEach(ex => extrasBox.appendChild(makeExtraRow(type, ex.key, ex.val)));
 
-    if(type === "OUTBOUND"){
-      const savedTimes = memoData ? (memoData["OUTBOUND-TIMES"] || {}) : {};
-      const outTimeBox = makeOutboundTimeBox(savedTimes);
-      const textArea = d.querySelector(`textarea[data-k="${type}-note"]`);
-      d.insertBefore(outTimeBox, textArea);
-    }
-
     return d;
   }
 
-  function buildFixedSections(memoData){
+  function buildEditor(memoData){
     sections.innerHTML = "";
-    sections.appendChild(makeSection("INBOUND", memoData));
-    sections.appendChild(makeSection("OUTBOUND", memoData));
+
+    const inboundSection = makeSection("INBOUND", memoData);
+    sections.appendChild(inboundSection);
+
+    const timeBox = makeOutboundTimeBox(memoData ? (memoData["OUTBOUND-TIMES"] || {}) : {});
+    sections.appendChild(timeBox);
+
+    const outboundSection = makeSection("OUTBOUND", memoData);
+    sections.appendChild(outboundSection);
   }
 
   function newMemo(){
     editId = null;
-    buildFixedSections(null);
+    buildEditor(null);
     openModal();
   }
 
@@ -920,6 +942,8 @@
       data[type+"-t"]  = pad(gi("t")?.value, 3);
       data[type+"-d"]  = pad(gi("d")?.value, 2);
       data[type+"-bb"] = pad(gi("bb")?.value, 2);
+      data[type+"-tt"] = type==="OUTBOUND" ? pad(gi("tt")?.value, 4) : "";
+      data[type+"-tb"] = type==="OUTBOUND" ? pad(gi("tb")?.value, 4) : "";
 
       data[type+"-cmpt1"] = (cm(1)?.value || "F3").trim() || "F3";
       data[type+"-cmpt2"] = cm(2)?.value || "";
@@ -943,14 +967,11 @@
       data[type+"-EXTRAS"] = extras;
     });
 
-    const outRoot = sections.querySelector('.section[data-type="OUTBOUND"]');
     const outTimes = {};
-    if(outRoot){
-      outRoot.querySelectorAll("[data-outtime-val]").forEach(el=>{
-        const key = el.dataset.outtimeVal;
-        outTimes[key] = normalizeTimeInput(el.textContent || "");
-      });
-    }
+    sections.querySelectorAll("[data-outtime-val]").forEach(el=>{
+      const key = el.dataset.outtimeVal;
+      outTimes[key] = normalizeTimeInput(el.textContent || "");
+    });
     data["OUTBOUND-TIMES"] = outTimes;
 
     if(editId){
@@ -960,7 +981,7 @@
       memos.push(data);
     }
 
-    localStorage.setItem("tiger_memos_simple", JSON.stringify(memos));
+    localStorage.setItem("tiger_memos_simple_v23", JSON.stringify(memos));
     closeModal();
     renderList(data.id);
   }
@@ -985,6 +1006,10 @@
       (m[type+"-bb"] || "").trim()
     ].filter(Boolean).join("/");
 
+    const ttTb = type === "OUTBOUND"
+      ? [(m["OUTBOUND-tt"] || "").trim(), (m["OUTBOUND-tb"] || "").trim()].filter(Boolean).join("/")
+      : "";
+
     const extras = (m[type+"-EXTRAS"] || [])
       .map(x => `${x.key}${x.val}`)
       .join(" ");
@@ -1001,6 +1026,7 @@
     if(cmpt3) bits.push(cmpt3);
     if(cmpt4) bits.push(cmpt4);
     if(td) bits.push(td);
+    if(ttTb) bits.push(ttTb);
     if(extras) bits.push(extras);
 
     return bits.join(" ");
@@ -1041,7 +1067,7 @@
     const m = memos.find(x=>x.id===id);
     if(!m) return;
     editId = id;
-    buildFixedSections(m);
+    buildEditor(m);
     document.querySelectorAll('input[data-k="SHARED-B"]').forEach(el => el.value = m.sharedB || "");
     document.querySelectorAll('input[data-k="SHARED-HASH"]').forEach(el => el.value = m.sharedHASH || "");
     openModal();
@@ -1055,7 +1081,7 @@
       return;
     }
     memos = memos.filter(m=>!ids.includes(m.id));
-    localStorage.setItem("tiger_memos_simple", JSON.stringify(memos));
+    localStorage.setItem("tiger_memos_simple_v23", JSON.stringify(memos));
     renderList();
   }
 
