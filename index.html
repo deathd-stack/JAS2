@@ -3,18 +3,13 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-<meta http-equiv="Pragma" content="no-cache" />
-<meta http-equiv="Expires" content="0" />
-<title>TIGER MEMO VER 2.0</title>
+<title>TIGER MEMO VER 2.2</title>
 
 <style>
   :root{
     --bg1:#f7e36a;
     --bg2:#f2d22a;
-    --card:#f6e7d7;
     --pill:#111;
-    --shadow:0 14px 26px rgba(0,0,0,.18);
     --blue:#2f7df6;
     --red:#e20000;
     --line:#cfcfcf;
@@ -32,13 +27,13 @@
       linear-gradient(180deg,var(--bg1),var(--bg2));
     min-height:100vh;
     overflow-x:hidden;
+    color:#111;
   }
 
   header{
     text-align:center;
     padding:22px 14px 10px;
     user-select:none;
-    cursor:pointer;
   }
 
   .titleWrap{
@@ -53,14 +48,12 @@
     font-size:42px;
     font-weight:1000;
     letter-spacing:-1px;
-    color:#111;
     text-transform:uppercase;
   }
 
   .titleVer{
     font-size:18px;
     font-weight:1000;
-    color:#111;
     opacity:.9;
     text-transform:uppercase;
   }
@@ -69,7 +62,7 @@
     display:flex;
     justify-content:center;
     gap:calc(14px * var(--ui));
-    padding:calc(8px * var(--ui)) calc(14px * var(--ui)) calc(6px * var(--ui));
+    padding:calc(8px * var(--ui)) calc(14px * var(--ui)) calc(12px * var(--ui));
     flex-wrap:wrap;
   }
 
@@ -88,45 +81,16 @@
 
   button:active{transform:scale(.99)}
 
-  .weekBar{
-    width:min(780px, calc(100% - 28px));
-    margin:0 auto calc(10px * var(--ui));
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    gap:calc(8px * var(--ui));
-    flex-wrap:wrap;
-  }
-
-  .weekBtn{
-    padding:calc(8px * var(--ui)) calc(12px * var(--ui));
-    font-size:calc(14px * var(--ui));
-    border-radius:calc(14px * var(--ui));
-    box-shadow:none;
-  }
-
-  .weekLabel{
-    background:rgba(255,255,255,.92);
-    border-radius:calc(14px * var(--ui));
-    padding:calc(9px * var(--ui)) calc(14px * var(--ui));
-    font-size:calc(14px * var(--ui));
-    font-weight:1000;
-    color:#111;
-    box-shadow:0 6px 16px rgba(0,0,0,.12);
-    text-transform:uppercase;
-  }
-
   #memoList{
-    padding:calc(10px * var(--ui)) calc(14px * var(--ui)) calc(110px * var(--ui));
+    padding:calc(10px * var(--ui)) calc(14px * var(--ui)) calc(40px * var(--ui));
     max-width:780px;
     margin:0 auto;
   }
 
-  .emptyWeek{
+  .emptyMemo{
     background:rgba(255,255,255,.22);
     border-radius:calc(20px * var(--ui));
     padding:calc(18px * var(--ui));
-    color:#111;
     text-align:center;
     font-size:calc(16px * var(--ui));
     font-weight:1000;
@@ -222,53 +186,8 @@
     text-transform:uppercase;
   }
 
-  .datePill{
-    margin-top:calc(6px * var(--ui));
-    margin-left:calc(40px * var(--ui));
-    font-size:calc(12px * var(--ui));
-    color:#5a5147;
-    font-weight:1000;
-    text-transform:uppercase;
-  }
-
   .flash{animation:flash .55s;}
   @keyframes flash{50%{transform:scale(1.01); filter:brightness(1.05)}}
-
-  #equipBtn{
-    position:fixed;
-    left:calc(14px * var(--ui));
-    bottom:calc(18px * var(--ui));
-    z-index:20;
-    border:none;
-    border-radius:calc(18px * var(--ui));
-    background:#fff;
-    padding:calc(12px * var(--ui)) calc(18px * var(--ui));
-    font-weight:1000;
-    color:var(--blue);
-    font-size:calc(16px * var(--ui));
-    box-shadow:0 12px 22px rgba(0,0,0,.18);
-    text-transform:uppercase;
-  }
-
-  #equipBadge{
-    position:fixed;
-    right:calc(14px * var(--ui));
-    bottom:calc(18px * var(--ui));
-    z-index:20;
-    background:rgba(0,0,0,.86);
-    color:#fff;
-    border-radius:calc(20px * var(--ui));
-    padding:calc(12px * var(--ui)) calc(14px * var(--ui));
-    font-weight:1000;
-    line-height:1.15;
-    text-align:right;
-    box-shadow:0 14px 26px rgba(0,0,0,.22);
-    display:none;
-    text-transform:uppercase;
-  }
-
-  #equipBadge .b1{font-size:calc(18px * var(--ui));}
-  #equipBadge .b2{font-size:calc(18px * var(--ui)); opacity:.95;}
 
   .modal{
     position:fixed;
@@ -317,35 +236,12 @@
     font-weight:1000;
     color:#111;
     padding:calc(6px * var(--ui)) 0 calc(10px * var(--ui));
-    cursor:pointer;
     user-select:none;
     text-transform:uppercase;
   }
 
   .modalTitleTap .m1{font-size:calc(18px * var(--ui));}
   .modalTitleTap .m2{font-size:calc(12px * var(--ui)); opacity:.55; margin-top:2px;}
-
-  .dateLine{
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    gap:calc(8px * var(--ui));
-    margin-bottom:calc(8px * var(--ui));
-  }
-
-  .dateLine .dateLab{
-    font-size:calc(15px * var(--ui));
-    font-weight:1000;
-    color:#111;
-    text-transform:uppercase;
-  }
-
-  .dateInput{
-    width:auto !important;
-    min-width:calc(180px * var(--ui));
-    text-align:center;
-    padding:0 calc(10px * var(--ui));
-  }
 
   .section{
     background:#f2f2f2;
@@ -585,21 +481,6 @@
     border-radius:calc(14px * var(--ui));
   }
 
-  #photoLayer{
-    position:fixed;
-    inset:0;
-    background:#000;
-    display:none;
-    justify-content:center;
-    align-items:center;
-    z-index:90;
-  }
-
-  #photoLayer img{
-    max-width:100%;
-    max-height:100%;
-  }
-
   .rowGrid3{
     display:grid;
     grid-template-columns:
@@ -718,33 +599,19 @@
 
 <body>
 
-<header id="homeHeader" onclick="openPhoto()" ondblclick="openPhoto()">
+<header>
   <div class="titleWrap">
     <div class="titleMain">TIGER MEMO</div>
-    <div class="titleVer">VER 2.0</div>
+    <div class="titleVer">VER 2.2</div>
   </div>
 </header>
 
 <div class="controls">
   <button type="button" onclick="newMemo()">ADD</button>
   <button type="button" onclick="deleteSelected()">DELETE</button>
-  <button type="button" onclick="addPhoto()">PHOTO</button>
-</div>
-
-<div class="weekBar">
-  <button type="button" class="weekBtn" onclick="moveWeek(-1)">PREV WEEK</button>
-  <div class="weekLabel" id="weekLabel">THIS WEEK</div>
-  <button type="button" class="weekBtn" onclick="goThisWeek()">TODAY</button>
-  <button type="button" class="weekBtn" onclick="deleteCurrentWeek()">DEL WEEK</button>
-  <button type="button" class="weekBtn" onclick="moveWeek(1)">NEXT WEEK</button>
 </div>
 
 <div id="memoList"></div>
-
-<button id="equipBtn" type="button" onclick="openEquip()">EQUIPMENT</button>
-<div id="equipBadge"></div>
-
-<input type="file" id="photoInput" accept="image/*" hidden />
 
 <div class="modal" id="modal" aria-hidden="true">
   <div class="box" id="sheet" role="dialog" aria-modal="true">
@@ -752,14 +619,9 @@
       <div class="drag-handle"></div>
     </div>
 
-    <div class="modalTitleTap" onclick="openPhoto()">
+    <div class="modalTitleTap">
       <div class="m1">TIGER MEMO</div>
-      <div class="m2">TAP TO OPEN PHOTO</div>
-    </div>
-
-    <div class="dateLine">
-      <div class="dateLab">DATE</div>
-      <input type="date" id="memoDate" class="dateInput">
+      <div class="m2">MEMO SETTINGS</div>
     </div>
 
     <div id="sections"></div>
@@ -771,59 +633,15 @@
   </div>
 </div>
 
-<div id="photoLayer" ondblclick="closePhoto()" onclick="closePhoto()">
-  <img id="photoImg" alt="photo" />
-</div>
-
-<div class="modal" id="equipModal" aria-hidden="true">
-  <div class="box" style="max-height:70vh" onclick="event.stopPropagation()">
-    <div class="dragArea">
-      <div class="drag-handle"></div>
-    </div>
-
-    <div style="font-weight:1000;font-size:20px;margin:6px 0 12px; text-transform:uppercase;">EQUIPMENT</div>
-
-    <div class="row">
-      <div class="lab" style="min-width:72px;">TUG</div>
-      <input id="tug1" class="numBox" inputmode="numeric" maxlength="2" placeholder="00">
-      <input id="tug2" class="numBox" inputmode="numeric" maxlength="2" placeholder="00">
-    </div>
-
-    <div class="row">
-      <div class="lab" style="min-width:72px;">BELT</div>
-      <input id="belt" class="numBox" inputmode="numeric" maxlength="2" placeholder="00">
-    </div>
-
-    <div class="bottomBtns">
-      <button type="button" onclick="saveEquip()">SAVE</button>
-      <button type="button" onclick="closeEquip()">CLOSE</button>
-    </div>
-  </div>
-</div>
-
 <script>
   const modal = document.getElementById("modal");
   const sheet = document.getElementById("sheet");
   const dragArea = document.getElementById("dragArea");
   const sections = document.getElementById("sections");
   const memoList = document.getElementById("memoList");
-  const photoInput = document.getElementById("photoInput");
-  const photoLayer = document.getElementById("photoLayer");
-  const photoImg = document.getElementById("photoImg");
-  const memoDate = document.getElementById("memoDate");
-  const weekLabel = document.getElementById("weekLabel");
 
-  const equipBtn = document.getElementById("equipBtn");
-  const equipBadge = document.getElementById("equipBadge");
-  const equipModal = document.getElementById("equipModal");
-  const tug1 = document.getElementById("tug1");
-  const tug2 = document.getElementById("tug2");
-  const belt = document.getElementById("belt");
-
-  let memos = JSON.parse(localStorage.getItem("tiger_memos") || "[]");
-  let photo = localStorage.getItem("tiger_photo");
+  let memos = JSON.parse(localStorage.getItem("tiger_memos_simple") || "[]");
   let editId = null;
-  let weekOffset = 0;
 
   const EXTRA_KEYS = ["CREW","C","W","TS"];
   const OUTBOUND_TIME_FIELDS = [
@@ -838,7 +656,7 @@
     { key:"refuelFinished", label:"REFUELING FINISHED" }
   ];
 
-    function onlyNum(val, len){
+  function onlyNum(val, len){
     return (val || "").replace(/[^0-9]/g, "").slice(0, len);
   }
 
@@ -850,86 +668,6 @@
   function nowTime(){
     const d = new Date();
     return String(d.getHours()).padStart(2,"0") + ":" + String(d.getMinutes()).padStart(2,"0");
-  }
-
-  function todayStr(){
-    const d = new Date();
-    const y = d.getFullYear();
-    const m = String(d.getMonth()+1).padStart(2,"0");
-    const day = String(d.getDate()).padStart(2,"0");
-    return `${y}-${m}-${day}`;
-  }
-
-  function dateToStr(d){
-    const y = d.getFullYear();
-    const m = String(d.getMonth()+1).padStart(2,"0");
-    const day = String(d.getDate()).padStart(2,"0");
-    return `${y}-${m}-${day}`;
-  }
-
-  function getMonday(dateLike){
-    const d = new Date(dateLike);
-    d.setHours(0,0,0,0);
-    const day = d.getDay() || 7;
-    d.setDate(d.getDate() - day + 1);
-    return d;
-  }
-
-  function getSunday(dateLike){
-    const d = getMonday(dateLike);
-    d.setDate(d.getDate() + 6);
-    return d;
-  }
-
-  function getWeekKey(dateLike){
-    return dateToStr(getMonday(dateLike));
-  }
-
-  function getViewingDate(){
-    const d = new Date();
-    d.setDate(d.getDate() + weekOffset * 7);
-    return d;
-  }
-
-  function getViewingWeekKey(){
-    return getWeekKey(getViewingDate());
-  }
-
-  function updateWeekLabel(){
-    const monday = getMonday(getViewingDate());
-    const sunday = getSunday(getViewingDate());
-    weekLabel.textContent = `${dateToStr(monday)} ~ ${dateToStr(sunday)}`;
-  }
-
-  function calcWeekOffsetFromDate(dateStr){
-    const thisMonday = getMonday(new Date());
-    const targetMonday = getMonday(dateStr);
-    return Math.round((targetMonday - thisMonday) / 86400000 / 7);
-  }
-
-  function moveWeek(n){
-    weekOffset += n;
-    updateWeekLabel();
-    renderList();
-  }
-
-  function goThisWeek(){
-    weekOffset = 0;
-    updateWeekLabel();
-    renderList();
-  }
-
-  function deleteCurrentWeek(){
-    const wk = getViewingWeekKey();
-    const target = memos.filter(m => m.weekKey === wk);
-    if(!target.length){
-      alert("NO MEMO IN THIS WEEK");
-      return;
-    }
-    if(!confirm("DELETE ALL MEMOS IN THIS WEEK?")) return;
-    memos = memos.filter(m => m.weekKey !== wk);
-    localStorage.setItem("tiger_memos", JSON.stringify(memos));
-    renderList();
   }
 
   function normalizeTimeInput(val){
@@ -1145,7 +883,6 @@
 
   function newMemo(){
     editId = null;
-    memoDate.value = todayStr();
     buildFixedSections(null);
     openModal();
   }
@@ -1153,8 +890,6 @@
   function openModal(){
     modal.style.display = "flex";
     modal.setAttribute("aria-hidden","false");
-    equipBtn.style.display = "none";
-    equipBadge.style.display = "none";
     sheet.style.transform = "translateY(0)";
     currentTranslate = 0;
   }
@@ -1163,15 +898,10 @@
     modal.style.display = "none";
     modal.setAttribute("aria-hidden","true");
     editId = null;
-    equipBtn.style.display = "block";
-    updateEquipBadge();
   }
 
-    function saveMemo(){
-    const data = { id: editId ?? Date.now(), hasIn:true, hasOut:true };
-
-    data.memoDate = memoDate.value || todayStr();
-    data.weekKey = getWeekKey(data.memoDate);
+  function saveMemo(){
+    const data = { id: editId ?? Date.now() };
 
     data.sharedB = pad(document.querySelector('input[data-k="SHARED-B"]')?.value || "", 5);
     data.sharedHASH = pad(document.querySelector('input[data-k="SHARED-HASH"]')?.value || "", 3);
@@ -1230,9 +960,7 @@
       memos.push(data);
     }
 
-    localStorage.setItem("tiger_memos", JSON.stringify(memos));
-    weekOffset = calcWeekOffsetFromDate(data.memoDate);
-    updateWeekLabel();
+    localStorage.setItem("tiger_memos_simple", JSON.stringify(memos));
     closeModal();
     renderList(data.id);
   }
@@ -1281,22 +1009,12 @@
   function renderList(flashId){
     memoList.innerHTML = "";
 
-    const viewingWeek = getViewingWeekKey();
-    const weekMemos = memos
-      .filter(m => (m.weekKey || getWeekKey(m.memoDate || todayStr())) === viewingWeek)
-      .sort((a,b)=>{
-        const da = a.memoDate || "";
-        const db = b.memoDate || "";
-        if(da === db) return Number(a.id) - Number(b.id);
-        return da < db ? -1 : 1;
-      });
-
-    if(!weekMemos.length){
-      memoList.innerHTML = `<div class="emptyWeek">NO MEMO IN THIS WEEK</div>`;
+    if(!memos.length){
+      memoList.innerHTML = `<div class="emptyMemo">NO MEMO</div>`;
       return;
     }
 
-    weekMemos.forEach(m=>{
+    memos.forEach(m=>{
       const card = document.createElement("div");
       card.className = "memoCard" + (m.id===flashId ? " flash" : "");
       card.innerHTML = `
@@ -1307,7 +1025,6 @@
             <div class="line"><div class="tagPill">OUT</div><div class="textPill">${formatTitleLine(m, "OUTBOUND")}</div></div>
           </div>
         </div>
-        <div class="datePill">${m.memoDate || ""}</div>
       `;
       memoList.appendChild(card);
     });
@@ -1324,7 +1041,6 @@
     const m = memos.find(x=>x.id===id);
     if(!m) return;
     editId = id;
-    memoDate.value = m.memoDate || todayStr();
     buildFixedSections(m);
     document.querySelectorAll('input[data-k="SHARED-B"]').forEach(el => el.value = m.sharedB || "");
     document.querySelectorAll('input[data-k="SHARED-HASH"]').forEach(el => el.value = m.sharedHASH || "");
@@ -1339,80 +1055,9 @@
       return;
     }
     memos = memos.filter(m=>!ids.includes(m.id));
-    localStorage.setItem("tiger_memos", JSON.stringify(memos));
+    localStorage.setItem("tiger_memos_simple", JSON.stringify(memos));
     renderList();
   }
-
-  function addPhoto(){
-    photoInput.value = "";
-    photoInput.click();
-  }
-
-  photoInput.onchange = (e)=>{
-    const f = e.target.files && e.target.files[0];
-    if(!f) return;
-    const r = new FileReader();
-    r.onload = ()=>{
-      photo = r.result;
-      localStorage.setItem("tiger_photo", photo);
-    };
-    r.readAsDataURL(f);
-  };
-
-  function openPhoto(){
-    if(!photo) return;
-    photoImg.src = photo;
-    photoLayer.style.display = "flex";
-  }
-
-  function closePhoto(){
-    photoLayer.style.display = "none";
-  }
-
-  function openEquip(){
-    const eq = JSON.parse(localStorage.getItem("tiger_equipment") || "{}");
-    tug1.value = pad(eq.tug1,2);
-    tug2.value = pad(eq.tug2,2);
-    belt.value = pad(eq.belt,2);
-    equipModal.style.display = "flex";
-    equipModal.setAttribute("aria-hidden","false");
-  }
-
-  function closeEquip(){
-    equipModal.style.display = "none";
-    equipModal.setAttribute("aria-hidden","true");
-  }
-
-  function saveEquip(){
-    const eq = {
-      tug1: pad(tug1.value,2),
-      tug2: pad(tug2.value,2),
-      belt: pad(belt.value,2)
-    };
-    localStorage.setItem("tiger_equipment", JSON.stringify(eq));
-    updateEquipBadge();
-    closeEquip();
-  }
-
-  function updateEquipBadge(){
-    const eq = JSON.parse(localStorage.getItem("tiger_equipment") || "{}");
-    if(!eq.tug1 && !eq.tug2 && !eq.belt){
-      equipBadge.style.display = "none";
-      return;
-    }
-    const t1 = eq.tug1 || "00";
-    const t2 = eq.tug2 || "00";
-    const b = eq.belt || "00";
-    equipBadge.innerHTML = `
-      <div class="b1">TUG ${t1}/${t2}</div>
-      <div class="b2">BELT ${b}</div>
-    `;
-    equipBadge.style.display = "block";
-  }
-
-  equipModal.addEventListener("click",(e)=>{
-    if(e.target === equipModal) closeEquip();
-  });
 
   let startY = 0;
   let currentTranslate = 0;
@@ -1443,7 +1088,7 @@
     }
   }
 
-    dragArea.addEventListener("touchstart", (e)=> onStart(e.touches[0].clientY), {passive:true});
+  dragArea.addEventListener("touchstart", (e)=> onStart(e.touches[0].clientY), {passive:true});
   dragArea.addEventListener("touchmove",  (e)=> onMove(e.touches[0].clientY),  {passive:true});
   dragArea.addEventListener("touchend",   ()=> onEnd());
 
@@ -1451,11 +1096,7 @@
   window.addEventListener("mousemove", (e)=> onMove(e.clientY));
   window.addEventListener("mouseup", ()=> onEnd());
 
-  memoDate.value = todayStr();
-  updateWeekLabel();
   renderList();
-  updateEquipBadge();
-
 </script>
 
 </body>
