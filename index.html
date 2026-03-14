@@ -528,40 +528,47 @@
     font-size:calc(20px * var(--ui));
     font-weight:1000;
     letter-spacing:.4px;
-    margin-bottom:calc(10px * var(--ui));
+    margin-bottom:calc(12px * var(--ui));
     text-transform:uppercase;
     color:#111;
   }
 
-  .outTimeRow{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
+  .outTimeGrid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
     gap:calc(10px * var(--ui));
-    padding:calc(8px * var(--ui)) 0;
-    border-bottom:1px solid #ececec;
   }
 
-  .outTimeRow:last-child{
-    border-bottom:none;
+  .outTimeItem{
+    border:1px solid #ececec;
+    border-radius:calc(14px * var(--ui));
+    padding:calc(10px * var(--ui));
+    background:#fff;
+    min-width:0;
   }
 
   .outTimeLabel{
-    flex:1;
-    min-width:0;
     font-size:calc(13px * var(--ui));
     font-weight:1000;
     color:#666;
     line-height:1.2;
     text-transform:uppercase;
+    margin-bottom:calc(6px * var(--ui));
   }
 
-  .outTimeRight{
+  .outTimeKor{
+    display:block;
+    font-size:calc(11px * var(--ui));
+    color:#8a8a8a;
+    margin-top:calc(3px * var(--ui));
+    text-transform:none;
+  }
+
+  .outTimeInline{
     display:flex;
-    align-items:baseline;
-    gap:calc(10px * var(--ui));
-    white-space:nowrap;
-    flex:0 0 auto;
+    align-items:center;
+    justify-content:flex-end;
+    gap:calc(8px * var(--ui));
   }
 
   .outMiniBtn{
@@ -582,27 +589,22 @@
   }
 
   .outMiniVal{
-    min-width:calc(58px * var(--ui));
+    min-width:calc(66px * var(--ui));
     text-align:right;
     font-size:calc(20px * var(--ui));
     font-weight:1000;
     color:var(--red);
     font-variant-numeric:tabular-nums;
+    cursor:pointer;
+  }
+
+  .outMiniVal.empty{
+    color:#999;
   }
 
   @media (max-width:520px){
-    .outTimeRow{
-      align-items:flex-start;
-    }
-
-    .outTimeRight{
-      flex-direction:column;
-      align-items:flex-end;
-      gap:calc(4px * var(--ui));
-    }
-
-    .outMiniVal{
-      min-width:auto;
+    .outTimeGrid{
+      grid-template-columns:1fr;
     }
   }
 </style>
@@ -656,15 +658,15 @@
 
   const EXTRA_KEYS = ["CREW","C","W","TS"];
   const OUTBOUND_TIME_FIELDS = [
-    { key:"rampTeam", label:"RAMP TEAM AT PLANESIDE (-60)" },
-    { key:"cargo", label:"CARGO AT PLANESIDE (-60)" },
-    { key:"loadingCommence", label:"LOADING COMMENCE" },
-    { key:"firstBag", label:"1ST BAG PLANESIDE" },
-    { key:"loadingFinished", label:"LOADING FINISHED" },
-    { key:"finalBag", label:"FINAL BAG AT PLANESIDE" },
-    { key:"refuelTruck", label:"REFUELING TRUCK AT PLANESIDE" },
-    { key:"refuelCommence", label:"REFUELING COMMENCE" },
-    { key:"refuelFinished", label:"REFUELING FINISHED" }
+    { key:"rampTeam", label:"RAMP TEAM AT PLANESIDE (-60)", kor:"램프팀 기재 옆 도착" },
+    { key:"cargo", label:"CARGO AT PLANESIDE (-60)", kor:"화물 기재 옆 도착" },
+    { key:"loadingCommence", label:"LOADING COMMENCE", kor:"적재 시작" },
+    { key:"firstBag", label:"1ST BAG PLANESIDE", kor:"첫 수하물 도착" },
+    { key:"loadingFinished", label:"LOADING FINISHED", kor:"적재 완료" },
+    { key:"finalBag", label:"FINAL BAG AT PLANESIDE", kor:"마지막 수하물 도착" },
+    { key:"refuelTruck", label:"REFUELING TRUCK AT PLANESIDE", kor:"주유차 기재 옆 도착" },
+    { key:"refuelCommence", label:"REFUELING COMMENCE", kor:"주유 시작" },
+    { key:"refuelFinished", label:"REFUELING FINISHED", kor:"주유 완료" }
   ];
 
   function onlyNum(val, len){
@@ -692,6 +694,12 @@
       return digits.slice(0,2) + ":" + digits.slice(2,4);
     }
     return raw.slice(0,5);
+  }
+
+  function askTime(cur=""){
+    const t = prompt("TIME 입력 (예: 23:24 또는 2324)", cur || nowTime());
+    if(t === null) return null;
+    return normalizeTimeInput(t);
   }
 
   document.addEventListener("input", (e)=>{
@@ -752,30 +760,56 @@
 
     wrap.innerHTML = `
       <div class="outTimeTitle">TIME</div>
-      ${OUTBOUND_TIME_FIELDS.map(f => `
-        <div class="outTimeRow">
-          <div class="outTimeLabel">${f.label}</div>
-          <div class="outTimeRight">
-            <button type="button" class="outMiniBtn" data-outtime-btn="${f.key}">TIME</button>
-            <div class="outMiniVal" data-outtime-val="${f.key}">${saved[f.key] || ""}</div>
-          </div>
-        </div>
-      `).join("")}
+      <div class="outTimeGrid">
+        ${OUTBOUND_TIME_FIELDS.map(f => {
+          const val = saved[f.key] || "";
+          return `
+            <div class="outTimeItem">
+              <div class="outTimeLabel">
+                ${f.label}
+                <span class="outTimeKor">${f.kor}</span>
+              </div>
+              <div class="outTimeInline">
+                <button type="button" class="outMiniBtn" data-outtime-btn="${f.key}">TIME</button>
+                <div class="outMiniVal ${val ? "" : "empty"}" data-outtime-val="${f.key}">${val || "--:--"}</div>
+              </div>
+            </div>
+          `;
+        }).join("")}
+      </div>
     `;
 
     wrap.querySelectorAll("[data-outtime-btn]").forEach(btn=>{
       btn.addEventListener("click", ()=>{
         const key = btn.dataset.outtimeBtn;
         const valBox = wrap.querySelector(`[data-outtime-val="${key}"]`);
-        if(valBox) valBox.textContent = nowTime();
+        if(valBox){
+          valBox.textContent = nowTime();
+          valBox.classList.remove("empty");
+        }
       });
 
       btn.addEventListener("dblclick", ()=>{
         const key = btn.dataset.outtimeBtn;
         const valBox = wrap.querySelector(`[data-outtime-val="${key}"]`);
-        const cur = valBox ? (valBox.textContent || nowTime()) : nowTime();
-        const t = prompt("TIME (HH:MM 24H)", cur);
-        if(t && valBox) valBox.textContent = normalizeTimeInput(t);
+        if(!valBox) return;
+        const cur = valBox.textContent === "--:--" ? "" : valBox.textContent;
+        const t = askTime(cur);
+        if(t !== null){
+          valBox.textContent = t || "--:--";
+          valBox.classList.toggle("empty", !t);
+        }
+      });
+    });
+
+    wrap.querySelectorAll("[data-outtime-val]").forEach(valBox=>{
+      valBox.addEventListener("click", ()=>{
+        const cur = valBox.textContent === "--:--" ? "" : valBox.textContent;
+        const t = askTime(cur);
+        if(t !== null){
+          valBox.textContent = t || "--:--";
+          valBox.classList.toggle("empty", !t);
+        }
       });
     });
 
@@ -807,7 +841,7 @@
           </div>
           <div class="timeWrap">
             <button type="button" class="timeBtn" data-timebtn="${type}">TIME</button>
-            <div class="timeVal" id="${type}-TIMESHOWN">${savedTime}</div>
+            <div class="timeVal" id="${type}-TIMESHOWN">${savedTime || "--:--"}</div>
           </div>
         </div>
       </div>
@@ -877,10 +911,20 @@
       timeShown.textContent = nowTime();
     });
 
+    timeShown.addEventListener("click", ()=>{
+      const cur = timeShown.textContent === "--:--" ? "" : timeShown.textContent;
+      const t = askTime(cur);
+      if(t !== null){
+        timeShown.textContent = t || "--:--";
+      }
+    });
+
     timeBtn.addEventListener("dblclick", ()=>{
-      const cur = timeShown.textContent || nowTime();
-      const t = prompt("TIME (HH:MM 24H)", cur);
-      if(t) timeShown.textContent = normalizeTimeInput(t);
+      const cur = timeShown.textContent === "--:--" ? "" : timeShown.textContent;
+      const t = askTime(cur);
+      if(t !== null){
+        timeShown.textContent = t || "--:--";
+      }
     });
 
     const extrasBox = d.querySelector(`#${type}-EXTRAS`);
@@ -953,8 +997,9 @@
       data[type+"-note"] = note ? (note.value || "") : "";
 
       const shown = document.getElementById(type+"-TIMESHOWN");
-      data[type+"-TIME"] = shown ? (shown.textContent || "") : "";
-
+      const shownVal = shown ? shown.textContent : "";
+      data[type+"-TIME"] = shownVal === "--:--" ? "" : shownVal;
+      
       const extras = [];
       const box = root.querySelector(`#${type}-EXTRAS`);
       if(box){
@@ -970,7 +1015,8 @@
     const outTimes = {};
     sections.querySelectorAll("[data-outtime-val]").forEach(el=>{
       const key = el.dataset.outtimeVal;
-      outTimes[key] = normalizeTimeInput(el.textContent || "");
+      const val = el.textContent === "--:--" ? "" : el.textContent;
+      outTimes[key] = normalizeTimeInput(val || "");
     });
     data["OUTBOUND-TIMES"] = outTimes;
 
