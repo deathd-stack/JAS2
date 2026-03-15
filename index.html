@@ -325,6 +325,7 @@
     min-width:calc(64px * var(--ui));
     text-align:right;
     font-variant-numeric:tabular-nums;
+    cursor:pointer;
   }
 
   .row{
@@ -528,59 +529,56 @@
     font-size:calc(20px * var(--ui));
     font-weight:1000;
     letter-spacing:.4px;
-    margin-bottom:calc(12px * var(--ui));
+    margin-bottom:calc(10px * var(--ui));
     text-transform:uppercase;
     color:#111;
   }
 
-  .outTimeGrid{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:calc(10px * var(--ui));
+  .outTimeRow{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:8px;
+    padding:6px 0;
+    border-bottom:1px solid #ececec;
+    flex-wrap:nowrap;
   }
 
-  .outTimeItem{
-    border:1px solid #ececec;
-    border-radius:calc(14px * var(--ui));
-    padding:calc(10px * var(--ui));
-    background:#fff;
-    min-width:0;
+  .outTimeRow:last-child{
+    border-bottom:none;
   }
 
   .outTimeLabel{
-    font-size:calc(13px * var(--ui));
-    font-weight:1000;
+    flex:1;
+    min-width:0;
+    font-size:12px;
+    font-weight:900;
     color:#666;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
     line-height:1.2;
     text-transform:uppercase;
-    margin-bottom:calc(6px * var(--ui));
   }
 
-  .outTimeKor{
-    display:block;
-    font-size:calc(11px * var(--ui));
-    color:#8a8a8a;
-    margin-top:calc(3px * var(--ui));
-    text-transform:none;
-  }
-
-  .outTimeInline{
+  .outTimeRight{
     display:flex;
     align-items:center;
-    justify-content:flex-end;
-    gap:calc(8px * var(--ui));
+    gap:6px;
+    flex-shrink:0;
+    white-space:nowrap;
   }
 
   .outMiniBtn{
     border:none;
-    background:transparent;
+    background:#f3f3f3;
     box-shadow:none;
-    padding:calc(4px * var(--ui)) calc(6px * var(--ui));
+    padding:3px 8px;
     margin:0;
-    font-weight:1000;
-    font-size:calc(15px * var(--ui));
+    font-weight:900;
+    font-size:12px;
     color:#111;
-    border-radius:calc(10px * var(--ui));
+    border-radius:10px;
     text-transform:uppercase;
   }
 
@@ -589,22 +587,28 @@
   }
 
   .outMiniVal{
-    min-width:calc(66px * var(--ui));
+    min-width:48px;
     text-align:right;
-    font-size:calc(20px * var(--ui));
-    font-weight:1000;
+    font-size:15px;
+    font-weight:900;
     color:var(--red);
     font-variant-numeric:tabular-nums;
     cursor:pointer;
   }
 
-  .outMiniVal.empty{
-    color:#999;
-  }
-
   @media (max-width:520px){
-    .outTimeGrid{
-      grid-template-columns:1fr;
+    .outTimeLabel{
+      font-size:11px;
+    }
+
+    .outMiniBtn{
+      font-size:11px;
+      padding:2px 7px;
+    }
+
+    .outMiniVal{
+      font-size:14px;
+      min-width:44px;
     }
   }
 </style>
@@ -658,15 +662,15 @@
 
   const EXTRA_KEYS = ["CREW","C","W","TS"];
   const OUTBOUND_TIME_FIELDS = [
-    { key:"rampTeam", label:"RAMP TEAM AT PLANESIDE (-60)", kor:"스팟 도착" },
-    { key:"cargo", label:"CARGO AT PLANESIDE (-60)", kor:"화물 도착" },
-    { key:"firstBag", label:"1ST BAG PLANESIDE", kor:"1차BAG 도착" },
-    { key:"loadingCommence", label:"LOADING COMMENCE", kor:"탑재 시작" },
-    { key:"finalBag", label:"FINAL BAG AT PLANESIDE", kor:"마지막 수하물 도착" },
-    { key:"loadingFinished", label:"LOADING FINISHED", kor:"탑재 완료" },
-    { key:"refuelTruck", label:"REFUELING TRUCK AT PLANESIDE", kor:"급유차 도착" },
-    { key:"refuelCommence", label:"REFUELING COMMENCE", kor:"급유 시작" },
-    { key:"refuelFinished", label:"REFUELING FINISHED", kor:"급유 완료" }
+    { key:"rampTeam", label:"RAMP TEAM AT PLANESIDE (-60)" },
+    { key:"cargo", label:"CARGO AT PLANESIDE (-60)" },
+    { key:"loadingCommence", label:"LOADING COMMENCE" },
+    { key:"firstBag", label:"1ST BAG PLANESIDE" },
+    { key:"loadingFinished", label:"LOADING FINISHED" },
+    { key:"finalBag", label:"FINAL BAG AT PLANESIDE" },
+    { key:"refuelTruck", label:"REFUELING TRUCK AT PLANESIDE" },
+    { key:"refuelCommence", label:"REFUELING COMMENCE" },
+    { key:"refuelFinished", label:"REFUELING FINISHED" }
   ];
 
   function onlyNum(val, len){
@@ -696,8 +700,8 @@
     return raw.slice(0,5);
   }
 
-  function askTime(cur=""){
-    const t = prompt("TIME 입력 (예: 23:24 또는 2324)", cur || nowTime());
+  function askTime(currentValue=""){
+    const t = prompt("TIME (HH:MM 24H)", currentValue || nowTime());
     if(t === null) return null;
     return normalizeTimeInput(t);
   }
@@ -760,56 +764,38 @@
 
     wrap.innerHTML = `
       <div class="outTimeTitle">TIME</div>
-      <div class="outTimeGrid">
-        ${OUTBOUND_TIME_FIELDS.map(f => {
-          const val = saved[f.key] || "";
-          return `
-            <div class="outTimeItem">
-              <div class="outTimeLabel">
-                ${f.label}
-                <span class="outTimeKor">${f.kor}</span>
-              </div>
-              <div class="outTimeInline">
-                <button type="button" class="outMiniBtn" data-outtime-btn="${f.key}">TIME</button>
-                <div class="outMiniVal ${val ? "" : "empty"}" data-outtime-val="${f.key}">${val || "--:--"}</div>
-              </div>
-            </div>
-          `;
-        }).join("")}
-      </div>
+      ${OUTBOUND_TIME_FIELDS.map(f => `
+        <div class="outTimeRow">
+          <div class="outTimeLabel">${f.label}</div>
+          <div class="outTimeRight">
+            <button type="button" class="outMiniBtn" data-outtime-btn="${f.key}">TIME</button>
+            <div class="outMiniVal" data-outtime-val="${f.key}">${saved[f.key] || ""}</div>
+          </div>
+        </div>
+      `).join("")}
     `;
 
     wrap.querySelectorAll("[data-outtime-btn]").forEach(btn=>{
       btn.addEventListener("click", ()=>{
         const key = btn.dataset.outtimeBtn;
         const valBox = wrap.querySelector(`[data-outtime-val="${key}"]`);
-        if(valBox){
-          valBox.textContent = nowTime();
-          valBox.classList.remove("empty");
-        }
+        if(valBox) valBox.textContent = nowTime();
       });
 
       btn.addEventListener("dblclick", ()=>{
         const key = btn.dataset.outtimeBtn;
         const valBox = wrap.querySelector(`[data-outtime-val="${key}"]`);
-        if(!valBox) return;
-        const cur = valBox.textContent === "--:--" ? "" : valBox.textContent;
+        const cur = valBox ? (valBox.textContent || nowTime()) : nowTime();
         const t = askTime(cur);
-        if(t !== null){
-          valBox.textContent = t || "--:--";
-          valBox.classList.toggle("empty", !t);
-        }
+        if(t !== null && valBox) valBox.textContent = t;
       });
     });
 
     wrap.querySelectorAll("[data-outtime-val]").forEach(valBox=>{
       valBox.addEventListener("click", ()=>{
-        const cur = valBox.textContent === "--:--" ? "" : valBox.textContent;
+        const cur = valBox.textContent || "";
         const t = askTime(cur);
-        if(t !== null){
-          valBox.textContent = t || "--:--";
-          valBox.classList.toggle("empty", !t);
-        }
+        if(t !== null) valBox.textContent = t;
       });
     });
 
@@ -841,7 +827,7 @@
           </div>
           <div class="timeWrap">
             <button type="button" class="timeBtn" data-timebtn="${type}">TIME</button>
-            <div class="timeVal" id="${type}-TIMESHOWN">${savedTime || "--:--"}</div>
+            <div class="timeVal" id="${type}-TIMESHOWN">${savedTime}</div>
           </div>
         </div>
       </div>
@@ -911,20 +897,16 @@
       timeShown.textContent = nowTime();
     });
 
-    timeShown.addEventListener("click", ()=>{
-      const cur = timeShown.textContent === "--:--" ? "" : timeShown.textContent;
+    timeBtn.addEventListener("dblclick", ()=>{
+      const cur = timeShown.textContent || nowTime();
       const t = askTime(cur);
-      if(t !== null){
-        timeShown.textContent = t || "--:--";
-      }
+      if(t !== null) timeShown.textContent = t;
     });
 
-    timeBtn.addEventListener("dblclick", ()=>{
-      const cur = timeShown.textContent === "--:--" ? "" : timeShown.textContent;
+    timeShown.addEventListener("click", ()=>{
+      const cur = timeShown.textContent || "";
       const t = askTime(cur);
-      if(t !== null){
-        timeShown.textContent = t || "--:--";
-      }
+      if(t !== null) timeShown.textContent = t;
     });
 
     const extrasBox = d.querySelector(`#${type}-EXTRAS`);
@@ -997,9 +979,8 @@
       data[type+"-note"] = note ? (note.value || "") : "";
 
       const shown = document.getElementById(type+"-TIMESHOWN");
-      const shownVal = shown ? shown.textContent : "";
-      data[type+"-TIME"] = shownVal === "--:--" ? "" : shownVal;
-      
+      data[type+"-TIME"] = shown ? normalizeTimeInput(shown.textContent || "") : "";
+
       const extras = [];
       const box = root.querySelector(`#${type}-EXTRAS`);
       if(box){
@@ -1015,8 +996,7 @@
     const outTimes = {};
     sections.querySelectorAll("[data-outtime-val]").forEach(el=>{
       const key = el.dataset.outtimeVal;
-      const val = el.textContent === "--:--" ? "" : el.textContent;
-      outTimes[key] = normalizeTimeInput(val || "");
+      outTimes[key] = normalizeTimeInput(el.textContent || "");
     });
     data["OUTBOUND-TIMES"] = outTimes;
 
@@ -1067,8 +1047,8 @@
       bits.push(`${it} #[${hash}]`);
     }
     if(staOrStd) bits.push(staOrStd);
-    if(cmpt1) bits.push(cmpt1);
-    if(cmpt2) bits.push(cmpt2);
+    if(cmpt1 && cmpt1 !== "F") bits.push(cmpt1);
+    if(cmpt2 && cmpt2 !== "F") bits.push(cmpt2);
     if(cmpt3) bits.push(cmpt3);
     if(cmpt4) bits.push(cmpt4);
     if(td) bits.push(td);
