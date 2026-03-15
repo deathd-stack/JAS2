@@ -662,15 +662,15 @@
 
   const EXTRA_KEYS = ["CREW","C","W","TS"];
   const OUTBOUND_TIME_FIELDS = [
-    { key:"rampTeam", label:"RAMP TEAM AT PLANESIDE (-60)" },
-    { key:"cargo", label:"CARGO AT PLANESIDE (-60)" },
-    { key:"loadingCommence", label:"LOADING COMMENCE" },
-    { key:"firstBag", label:"1ST BAG PLANESIDE" },
-    { key:"loadingFinished", label:"LOADING FINISHED" },
-    { key:"finalBag", label:"FINAL BAG AT PLANESIDE" },
-    { key:"refuelTruck", label:"REFUELING TRUCK AT PLANESIDE" },
-    { key:"refuelCommence", label:"REFUELING COMMENCE" },
-    { key:"refuelFinished", label:"REFUELING FINISHED" }
+    { key:"rampTeam", label:"RAMP TEAM AT PLANESIDE (-60) 스팟 도착" },
+    { key:"cargo", label:"CARGO AT PLANESIDE (-60) 카고 도착" },
+    { key:"loadingCommence", label:"LOADING COMMENCE 탑재 시작" },
+    { key:"firstBag", label:"1ST BAG PLANESIDE 1차BAG 도착" },
+    { key:"finalBag", label:"FINAL BAG AT PLANESIDE 2차BAG 도착" },
+    { key:"loadingFinished", label:"LOADING FINISHED 탑재 완료" },
+    { key:"refuelTruck", label:"REFUELING TRUCK AT PLANESIDE 급유 도착" },
+    { key:"refuelCommence", label:"REFUELING COMMENCE 급유 시작" },
+    { key:"refuelFinished", label:"REFUELING FINISHED 급유 완료" }
   ];
 
   function onlyNum(val, len){
